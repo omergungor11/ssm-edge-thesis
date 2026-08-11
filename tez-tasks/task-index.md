@@ -14,9 +14,9 @@
 | 3 | Nicemlemenin yoğun tahmine transferi | 9-11 | 5 | 0 | 0 | 5 | 0 |
 | 4 | Yeniden formülasyon ← *riskli* | 12-13 | 4 | 0 | 0 | 4 | 0 |
 | 5 | Yazım ve toparlama | 14-16 | 5 | 0 | 0 | 5 | 0 |
-| **Total** | | | **38** | **0** | **0** | **38** | **0** |
+| **Total** | | | **38** | **2** | **0** | **36** | **0** |
 
-**Progress**: 2/38 (0%) — Faz 0, Hafta 1
+**Progress**: 2/38 (%5) — Faz 0, Hafta 1
 
 ### Kim sütunu
 
