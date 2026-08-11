@@ -8,7 +8,7 @@
 
 | Faz | Ad | Hafta | Total | Done | In Progress | Pending | Blocked |
 |-----|-----|-------|-------|------|-------------|---------|---------|
-| 0 | Öncül doğrulama + ölçüm altyapısı | 1-2 | 12 | 0 | 0 | 12 | 0 |
+| 0 | Öncül doğrulama + ölçüm altyapısı | 1-2 | 12 | 2 | 0 | 10 | 0 |
 | 1 | Doğruluk eşitleme | 3-5 | 7 | 0 | 0 | 7 | 0 |
 | 2 | Dağıtım yığını matrisi ← *kalp* | 6-8 | 5 | 0 | 0 | 5 | 0 |
 | 3 | Nicemlemenin yoğun tahmine transferi | 9-11 | 5 | 0 | 0 | 5 | 0 |
@@ -16,7 +16,7 @@
 | 5 | Yazım ve toparlama | 14-16 | 5 | 0 | 0 | 5 | 0 |
 | **Total** | | | **38** | **0** | **0** | **38** | **0** |
 
-**Progress**: 0/38 (0%) — Faz 0, Hafta 1
+**Progress**: 2/38 (0%) — Faz 0, Hafta 1
 
 ### Kim sütunu
 
@@ -35,8 +35,8 @@
 
 | ID | Task | Kim | Complexity | Status | Dependencies |
 |----|------|-----|-----------|--------|-------------|
-| TASK-001 | Git repo init + .gitignore + ilk commit | 🤖 | S | PENDING | - |
-| TASK-002 | Mac ortam kurulumu (Python 3.12 venv, torch/MPS, coremltools, onnxruntime) | 🤖 | M | PENDING | TASK-001 |
+| TASK-001 | Git repo init + .gitignore + ilk commit | 🤖 | S | ✅ DONE | - |
+| TASK-002 | Mac ortam kurulumu (Python 3.12 venv, torch/MPS, coremltools, onnxruntime) | 🤖 | M | ✅ DONE | TASK-001 |
 | TASK-003 | RTX 5070 ortamı: `nvidia-smi` VRAM doğrulama + CUDA/torch + **`mamba-ssm` derleme testi** | 🧑 | M | PENDING | - |
 | TASK-004 | VMamba-T referans gecikme ölçümü (PyTorch + özel CUDA çekirdeği) | 🤝 | M | PENDING | TASK-003 |
 | TASK-005 | ONNX export denemesi — hata mesajları, graf boyutu, yükleme süresi belgelenir | 🤝 | M | PENDING | TASK-004 |
