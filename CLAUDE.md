@@ -2,12 +2,13 @@
 
 ## Proje
 
-YL tezi: SSM tabanlı görü omurgalarının (VMamba vb.) teorik verimlilik avantajının gerçek dağıtım
-yığınlarında (PyTorch/CUDA, torch.compile, ONNX Runtime, CoreML/ANE) ne kadarının gerçekleştiğinin
-ampirik analizi. 16 hafta, hedef bitiş ~30 Kasım 2026.
+YL tezi: SSM tabanlı görü omurgalarının (VMamba vb.) teorik verimlilik avantajının **Apple Silicon**
+dağıtım yığınlarında (PyTorch eager/compile, ONNX Runtime CPU+CoreML EP, CoreML CPU/GPU/ANE) ne
+kadarının gerçekleştiğinin ampirik analizi. 16 hafta, hedef bitiş ~30 Kasım 2026.
 
 - **GitHub**: (henüz remote yok)
-- **Donanım**: RTX 5070 (ayrı sistem — eğitim + CUDA ölçüm) + Apple M5 Pro (bu makine — ANE ölçüm)
+- **Donanım**: Sadece bu makine — baz Apple M5, 24 GB (NVIDIA yok; revizyon → `tez-plans/revizyon-mac-only.md`)
+- **Eğitim yok**: yayınlanmış ADE20K checkpoint'leri + doğruluk-gecikme Pareto düzlemi
 
 ## Slash Commandlar
 

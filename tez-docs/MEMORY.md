@@ -25,9 +25,9 @@
 - Haftada tek somut çıktı; grafik üretildiği hafta yorumlanır
 
 ## Known Issues / Gotchas
-- **Bu makine Mac (M5 Pro)** — nvidia-smi yok. RTX 5070 ayrı sistemde, oradaki işler (TASK-003, 023) sadece Ömer yapabilir
-- RTX 5070 = Blackwell → `mamba-ssm` CUDA çekirdekleri derlenmeyebilir. Derleme hatası = tezin ilk bulgusu, panik değil
-- VRAM doğrulanmadı: 12 GB varsayımıyla plan kuruldu (Ti ise 16 GB — nvidia-smi bekleniyor)
+- **MAC-ONLY (11 Ağu revizyonu):** 5070'e erişim YOK, CUDA ekseni plandan çıktı → `tez-plans/revizyon-mac-only.md`. Donanım: baz Apple M5 (M5 Pro değil), 24 GB
+- Eğitim yok: yayınlanmış ADE20K checkpoint'leri + Pareto düzlemi (mamba-ssm MPS'te çalışmaz)
+- İlk kendi kanıtımız: trace export'ta ONNX graf boyutu L ile ölçekleniyor (L=196→3 MB, L=1024→13.4 MB)
 - ONNX Runtime #27796: Mamba, ONNX `Loop` yüzünden M3'te 17× yavaş — tezin öncül kanıtı
 - `powermetrics` sudo ister — harness tasarımında hesaba kat
 

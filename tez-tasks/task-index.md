@@ -1,22 +1,22 @@
 # Task Index
 
-> **Tez:** Teoriden Silikona — Durum-Uzayı Tabanlı Görü Omurgalarının Uç Cihazlarda Gerçekleşen Verimliliğinin Ampirik Analizi
+> **Tez:** Teoriden Silikona — Durum-Uzayı Tabanlı Görü Omurgalarının **Apple Silicon** Uç Donanımında Gerçekleşen Verimliliğinin Ampirik Analizi
 > **Başlangıç:** 10 Ağustos 2026 · **Hedef bitiş:** 30 Kasım 2026 (16 hafta)
-> Kaynak plan: [`tez-plans/deney-plani.md`](../tez-plans/deney-plani.md) · İskelet: [`tez-plans/tez-iskeleti.md`](../tez-plans/tez-iskeleti.md)
+> Kaynak plan: [`tez-plans/deney-plani.md`](../tez-plans/deney-plani.md) · **Revizyon:** [`tez-plans/revizyon-mac-only.md`](../tez-plans/revizyon-mac-only.md) (11 Ağu — NVIDIA ekseni çıkarıldı)
 
 ## Dashboard
 
 | Faz | Ad | Hafta | Total | Done | In Progress | Pending | Blocked |
 |-----|-----|-------|-------|------|-------------|---------|---------|
-| 0 | Öncül doğrulama + ölçüm altyapısı | 1-2 | 12 | 2 | 0 | 10 | 0 |
-| 1 | Doğruluk eşitleme | 3-5 | 7 | 0 | 0 | 7 | 0 |
-| 2 | Dağıtım yığını matrisi ← *kalp* | 6-8 | 5 | 0 | 0 | 5 | 0 |
-| 3 | Nicemlemenin yoğun tahmine transferi | 9-11 | 5 | 0 | 0 | 5 | 0 |
-| 4 | Yeniden formülasyon ← *riskli* | 12-13 | 4 | 0 | 0 | 4 | 0 |
+| 0 | Öncül doğrulama + ölçüm altyapısı | 1-2 | 11 | 2 | 3 | 6 | 0 |
+| 1 | Model edinimi + doğruluk doğrulama *(revize)* | 3-4 | 7 | 0 | 0 | 7 | 0 |
+| 2 | Apple dağıtım yığını matrisi ← *kalp* | 5-7 | 5 | 0 | 0 | 5 | 0 |
+| 3 | Nicemlemenin yoğun tahmine transferi | 8-10 | 5 | 0 | 0 | 5 | 0 |
+| 4 | ANE-dostu yeniden formülasyon ← *riskli* | 11-13 | 4 | 0 | 0 | 4 | 0 |
 | 5 | Yazım ve toparlama | 14-16 | 5 | 0 | 0 | 5 | 0 |
-| **Total** | | | **38** | **2** | **0** | **36** | **0** |
+| **Total** | | | **37** | **2** | **3** | **32** | **0** |
 
-**Progress**: 2/38 (%5) — Faz 0, Hafta 1
+**Progress**: 2/37 (%5) — Faz 0, Hafta 1 · TASK-003 iptal (5070 yok) · Eğitim fazı düştü → +2 hafta tampon (Faz 2 ve 4'e dağıtıldı)
 
 ### Kim sütunu
 
@@ -37,11 +37,11 @@
 |----|------|-----|-----------|--------|-------------|
 | TASK-001 | Git repo init + .gitignore + ilk commit | 🤖 | S | ✅ DONE | - |
 | TASK-002 | Mac ortam kurulumu (Python 3.12 venv, torch/MPS, coremltools, onnxruntime) | 🤖 | M | ✅ DONE | TASK-001 |
-| TASK-003 | RTX 5070 ortamı: `nvidia-smi` VRAM doğrulama + CUDA/torch + **`mamba-ssm` derleme testi** — *hibrit: opsiyonel, CUDA eksenini açar* | 🧑 | M | PENDING (paralel) | - |
-| TASK-004 | Referans gecikme ölçümü — **Mac'te** PyTorch eager (CPU+MPS), saf-torch selective scan; CUDA hücresi TASK-003 gelince eklenir | 🤝 | M | PENDING | TASK-002 |
-| TASK-005 | ONNX export denemesi — hata mesajları, graf boyutu, yükleme süresi belgelenir | 🤝 | M | PENDING | TASK-004 |
-| TASK-006 | ONNX Runtime ölçümü (CPU; CUDA EP → TASK-003 sonrası) → **ilk yavaşlama oranı** | 🤝 | M | PENDING | TASK-005 |
-| TASK-007 | CoreML export + M5 / ANE ölçümü | 🤝 | M | PENDING | TASK-002, TASK-005 |
+| TASK-003 | ~~RTX 5070 ortamı~~ **İPTAL** — 5070'e erişim yok (bkz. revizyon). 5070 dönerse arşivden geri açılır | — | — | ❌ CANCELLED | - |
+| TASK-004 | Referans gecikme ölçümü — PyTorch eager (CPU+MPS), saf-torch selective scan | 🤖 | M | IN PROGRESS | TASK-002 |
+| TASK-005 | ONNX export denemesi — graf boyutu, unroll davranışı, yükleme süresi | 🤖 | M | IN PROGRESS | TASK-004 |
+| TASK-006 | ONNX Runtime ölçümü (CPU EP + **CoreML EP**) → **ilk yavaşlama oranı** | 🤖 | M | IN PROGRESS | TASK-005 |
+| TASK-007 | CoreML export + M5 / ANE ölçümü (CPU/GPU/ANE compute unit ayrımı) | 🤝 | M | PENDING | TASK-002, TASK-005 |
 | TASK-008 | **KARAR NOKTASI** — `tez-docs/oncul-dogrulama.md`: öncül doğrulandı mı? | 🤝 | S | PENDING | TASK-006, TASK-007 |
 | TASK-009 | Ölçüm harness'ı: ısınma, senkronizasyon, termal bekleme, NVML/`powermetrics`, istatistik (medyan/std/P99) | 🤖 | L | PENDING | TASK-008 |
 | TASK-010 | Harness doğrulaması — ResNet-50 ile bilinen sayılar üretiliyor mu? | 🤝 | M | PENDING | TASK-009 |
@@ -52,22 +52,23 @@
 
 ---
 
-## Faz 1: Doğruluk eşitleme *(Hafta 3-5)*
+## Faz 1: Model edinimi ve doğruluk doğrulama *(Hafta 3-4)* — *revize: eğitim yok*
 
-> Farklı doğruluktaki modellerin hızını karşılaştırmak anlamsızdır. Önce aynı çizgiye getir.
+> Mac'te VMamba eğitimi fiilen imkânsız (mamba-ssm MPS'te yok). Yayınlanmış ADE20K checkpoint'leri
+> kullanılır; "eşit doğruluk" yerine **doğruluk-gecikme Pareto düzlemi** raporlanır.
+> Kazanılan ~2 hafta Faz 2'ye tampon.
 
 | ID | Task | Kim | Complexity | Status | Dependencies |
 |----|------|-----|-----------|--------|-------------|
-| TASK-013 | Segmentasyon boru hattı (UPerNet başlığı sabit, reçete dondurulur) | 🤖 | L | PENDING | TASK-011 |
-| TASK-014 | VMamba-T'yi ADE20K'da eğit (512×512, AMP + gradient checkpointing) | 🤝 | L | PENDING | TASK-013 |
-| TASK-015 | ViT-S / DeiT-S'i **birebir aynı reçeteyle** eğit | 🤝 | L | PENDING | TASK-013 |
-| TASK-016 | ConvNeXt-T'yi **birebir aynı reçeteyle** eğit | 🤝 | L | PENDING | TASK-013 |
-| TASK-017 | EfficientViM ekle (verimli SSM referansı) | 🤝 | M | PENDING | TASK-013 |
-| TASK-018 | **Tablo 4.1 — doğruluk eşitleme.** Gerekirse epoch/lr ile çizgiyi hizala | 🤝 | M | PENDING | TASK-014..017 |
+| TASK-013 | Değerlendirme boru hattı: ADE20K val + mIoU hesabı (UPerNet başlıklı hazır modeller) | 🤖 | L | PENDING | TASK-011 |
+| TASK-014 | VMamba-T ADE20K checkpoint'ini indir, Mac'te yükle, **bildirilen mIoU'yu doğrula** | 🤖 | M | PENDING | TASK-013 |
+| TASK-015 | DeiT/Swin-T checkpoint'i — aynı doğrulama | 🤖 | M | PENDING | TASK-013 |
+| TASK-016 | ConvNeXt-T checkpoint'i — aynı doğrulama | 🤖 | M | PENDING | TASK-013 |
+| TASK-017 | EfficientViM (verimli SSM referansı) — checkpoint varsa ekle, yoksa gerekçeyle düş | 🤖 | M | PENDING | TASK-013 |
+| TASK-018 | **Tablo 4.1 — model kartları:** param/GFLOPs/mIoU (bildirilen vs bizim doğruladığımız) + Pareto çerçevesi | 🤖 | M | PENDING | TASK-014..017 |
 | TASK-019 | Bölüm 2 (Kuramsal temeller) yazımı — literatür okurken paralel, biriktirme | 🤖 | L | PENDING | - |
 
-**12 GB notu:** AMP + gradient checkpointing zorunlu, batch 8-16. Sığmazsa 448×448'e in — bilimsel geçerlilik bozulmaz, yeter ki **tüm omurgalar için aynı** olsun.
-**Risk:** 12 GB eğitime yetmezse → dondurulmuş ImageNet ön-eğitimli omurga + sadece başlık eğitimi.
+**Risk:** VMamba'nın saf-torch fallback'i Mac'te çok yavaşsa mIoU doğrulaması alt-küme (ör. 500 görüntü) üzerinden yapılır — tam val seti yerine, gerekçesi yazılır.
 
 ---
 
@@ -77,8 +78,8 @@
 
 | ID | Task | Kim | Complexity | Status | Dependencies |
 |----|------|-----|-----------|--------|-------------|
-| TASK-020 | Export matrisi: 4 omurga × 4 yığın (PyTorch/CUDA, `torch.compile`, ONNX Runtime, CoreML). **Başarısız export'lar da belgelenir — başarısızlık da veridir** | 🤝 | L | PENDING | TASK-018 |
-| TASK-021 | Tam gecikme/bellek/enerji ölçümü + çözünürlük taraması (256/512/768/1024) | 🤝 | L | PENDING | TASK-020, TASK-010 |
+| TASK-020 | Export matrisi: 4 omurga × Apple yığınları (PyTorch eager CPU/MPS, `torch.compile`, ORT CPU EP, **ORT CoreML EP**, CoreML CPU/GPU/ANE). **Başarısız export'lar da belgelenir** | 🤝 | L | PENDING | TASK-018 |
+| TASK-021 | Tam gecikme/bellek/enerji ölçümü (`powermetrics`) + çözünürlük taraması (256/512/768/1024) | 🤝 | L | PENDING | TASK-020, TASK-010 |
 | TASK-022 | Operatör seviyesi profilleme: `Loop` yükü, bellek kopyaları, füzyon kaçırmaları | 🤝 | L | PENDING | TASK-021 |
 | TASK-023 | **ANE yürütme oranı doğrulaması** (Xcode profili) — model gerçekten ANE'de mi çalışıyor? | 🧑 | M | PENDING | TASK-021 |
 | TASK-024 | Bölüm 4.2 (AS1) + 4.3 (AS2) yazımı | 🤖 | L | PENDING | TASK-022, TASK-023 |
@@ -89,10 +90,10 @@
 
 | ID | Task | Kim | Complexity | Status | Dependencies |
 |----|------|-----|-----------|--------|-------------|
-| TASK-025 | PTQ4VM implementasyonu — sınıflandırma referansıyla doğrula, makaledeki sayıları üret | 🤝 | L | PENDING | TASK-021 |
-| TASK-026 | Aynı PTQ'yu segmentasyon modellerine uygula, doğruluk kaybını karşılaştır | 🤝 | L | PENDING | TASK-025 |
+| TASK-025 | Nicemleme boru hattı: **coremltools** (W8A8, W4/palettization) + ORT INT8 — sınıflandırma referansıyla doğrula; PTQ4VM literatür karşılaştırma çerçevesi | 🤝 | L | PENDING | TASK-021 |
+| TASK-026 | Aynı nicemlemeyi segmentasyon modellerine uygula, doğruluk kaybını karşılaştır | 🤝 | L | PENDING | TASK-025 |
 | TASK-027 | Çözünürlüğün aykırı değer dağılımına etkisi (aktivasyon histogramları, kanal istatistikleri) | 🤝 | M | PENDING | TASK-026 |
-| TASK-028 | Nicemlenmiş modelleri tekrar dört yığında ölç | 🤝 | M | PENDING | TASK-026 |
+| TASK-028 | Nicemlenmiş modelleri Apple yığınlarında yeniden ölç (ANE INT8 davranışı dahil) | 🤝 | M | PENDING | TASK-026 |
 | TASK-029 | Bölüm 4.4 (AS3) yazımı | 🤖 | M | PENDING | TASK-027, TASK-028 |
 
 ---
