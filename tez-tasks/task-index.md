@@ -8,15 +8,15 @@
 
 | Faz | Ad | Hafta | Total | Done | In Progress | Pending | Blocked |
 |-----|-----|-------|-------|------|-------------|---------|---------|
-| 0 | Öncül doğrulama + ölçüm altyapısı | 1-2 | 11 | 2 | 3 | 6 | 0 |
+| 0 | Öncül doğrulama + ölçüm altyapısı | 1-2 | 11 | 6 | 1 | 4 | 0 |
 | 1 | Model edinimi + doğruluk doğrulama *(revize)* | 3-4 | 7 | 0 | 0 | 7 | 0 |
 | 2 | Apple dağıtım yığını matrisi ← *kalp* | 5-7 | 5 | 0 | 0 | 5 | 0 |
 | 3 | Nicemlemenin yoğun tahmine transferi | 8-10 | 5 | 0 | 0 | 5 | 0 |
 | 4 | ANE-dostu yeniden formülasyon ← *riskli* | 11-13 | 4 | 0 | 0 | 4 | 0 |
 | 5 | Yazım ve toparlama | 14-16 | 5 | 0 | 0 | 5 | 0 |
-| **Total** | | | **37** | **2** | **3** | **32** | **0** |
+| **Total** | | | **37** | **6** | **1** | **30** | **0** |
 
-**Progress**: 2/37 (%5) — Faz 0, Hafta 1 · TASK-003 iptal (5070 yok) · Eğitim fazı düştü → +2 hafta tampon (Faz 2 ve 4'e dağıtıldı)
+**Progress**: 6/37 (%16) — Faz 0, Hafta 1 → 2 geçişi · **Öncül doğrulandı** (`tez-docs/oncul-dogrulama.md`) · *TASK-006: CoreML EP hücresi Faz 2'ye devredildi
 
 ### Kim sütunu
 
@@ -38,11 +38,11 @@
 | TASK-001 | Git repo init + .gitignore + ilk commit | 🤖 | S | ✅ DONE | - |
 | TASK-002 | Mac ortam kurulumu (Python 3.12 venv, torch/MPS, coremltools, onnxruntime) | 🤖 | M | ✅ DONE | TASK-001 |
 | TASK-003 | ~~RTX 5070 ortamı~~ **İPTAL** — 5070'e erişim yok (bkz. revizyon). 5070 dönerse arşivden geri açılır | — | — | ❌ CANCELLED | - |
-| TASK-004 | Referans gecikme ölçümü — PyTorch eager (CPU+MPS), saf-torch selective scan | 🤖 | M | IN PROGRESS | TASK-002 |
-| TASK-005 | ONNX export denemesi — graf boyutu, unroll davranışı, yükleme süresi | 🤖 | M | IN PROGRESS | TASK-004 |
-| TASK-006 | ONNX Runtime ölçümü (CPU EP + **CoreML EP**) → **ilk yavaşlama oranı** | 🤖 | M | IN PROGRESS | TASK-005 |
-| TASK-007 | CoreML export + M5 / ANE ölçümü (CPU/GPU/ANE compute unit ayrımı) | 🤝 | M | PENDING | TASK-002, TASK-005 |
-| TASK-008 | **KARAR NOKTASI** — `tez-docs/oncul-dogrulama.md`: öncül doğrulandı mı? | 🤝 | S | PENDING | TASK-006, TASK-007 |
+| TASK-004 | Referans gecikme ölçümü — PyTorch eager (CPU+MPS), saf-torch selective scan | 🤖 | M | ✅ DONE | TASK-002 |
+| TASK-005 | ONNX export denemesi — graf boyutu, unroll davranışı, yükleme süresi | 🤖 | M | ✅ DONE | TASK-004 |
+| TASK-006 | ONNX Runtime ölçümü (CPU EP + **CoreML EP**) → **ilk yavaşlama oranı** | 🤖 | M | ✅ DONE* | TASK-005 |
+| TASK-007 | CoreML export + M5 / ANE ölçümü (CPU/GPU/ANE compute unit ayrımı) | 🤝 | M | 🔶 PARTIAL (ALL units ölçüldü; unit ayrımı + Xcode → Faz 2) | TASK-002, TASK-005 |
+| TASK-008 | **KARAR NOKTASI** — `tez-docs/oncul-dogrulama.md`: öncül doğrulandı mı? | 🤝 | S | ✅ DONE — **doğrulandı (rafine)** | TASK-006, TASK-007 |
 | TASK-009 | Ölçüm harness'ı: ısınma, senkronizasyon, termal bekleme, NVML/`powermetrics`, istatistik (medyan/std/P99) | 🤖 | L | PENDING | TASK-008 |
 | TASK-010 | Harness doğrulaması — ResNet-50 ile bilinen sayılar üretiliyor mu? | 🤝 | M | PENDING | TASK-009 |
 | TASK-011 | Veri kümesi boru hattı: ADE20K, Cityscapes, ImageNet-1k alt kümesi | 🤖 | M | PENDING | TASK-002 |

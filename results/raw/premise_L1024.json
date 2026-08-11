@@ -1,0 +1,73 @@
+{
+  "timestamp": "2026-08-11T20:21:10.888570+00:00",
+  "host": {
+    "platform": "macOS-26.5.2-arm64-arm-64bit",
+    "python": "3.12.13",
+    "torch": "2.13.0"
+  },
+  "model": {
+    "d_model": 96,
+    "d_state": 16,
+    "layers": 4,
+    "params": 132996
+  },
+  "seq_len": 1024,
+  "ort_opt_level": "all",
+  "stages": {
+    "torch_cpu": {
+      "median_ms": 59.296,
+      "mean_ms": 59.813,
+      "std_ms": 4.418,
+      "p99_ms": 63.634,
+      "runs": 50
+    },
+    "torch_mps": {
+      "median_ms": 91.753,
+      "mean_ms": 92.93,
+      "std_ms": 6.937,
+      "p99_ms": 98.453,
+      "runs": 50
+    },
+    "onnx_export": {
+      "ok": true,
+      "export_s": 25.76
+    },
+    "onnx_graph": {
+      "size_mb": 13.38,
+      "num_nodes": 91363,
+      "top_ops": {
+        "Constant": 21597,
+        "Mul": 20500,
+        "Unsqueeze": 20480,
+        "Gather": 16388,
+        "Add": 4116,
+        "Exp": 4100,
+        "ReduceSum": 4096,
+        "Slice": 24
+      },
+      "loop_nodes": 0
+    },
+    "ort_load": {
+      "status": "ok",
+      "load_s": 35.36
+    },
+    "ort_cpu": {
+      "median_ms": 40.035,
+      "mean_ms": 40.429,
+      "std_ms": 3.433,
+      "p99_ms": 47.405,
+      "runs": 50,
+      "slowdown_vs_torch_cpu": 0.68
+    },
+    "coreml": {
+      "status": "ok",
+      "median_ms": 3.832,
+      "mean_ms": 3.877,
+      "std_ms": 0.135,
+      "p99_ms": 4.202,
+      "runs": 50,
+      "convert_s": 5668.23,
+      "slowdown_vs_torch_cpu": 0.06
+    }
+  }
+}
