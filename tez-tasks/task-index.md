@@ -37,11 +37,11 @@
 |----|------|-----|-----------|--------|-------------|
 | TASK-001 | Git repo init + .gitignore + ilk commit | 🤖 | S | ✅ DONE | - |
 | TASK-002 | Mac ortam kurulumu (Python 3.12 venv, torch/MPS, coremltools, onnxruntime) | 🤖 | M | ✅ DONE | TASK-001 |
-| TASK-003 | RTX 5070 ortamı: `nvidia-smi` VRAM doğrulama + CUDA/torch + **`mamba-ssm` derleme testi** | 🧑 | M | PENDING | - |
-| TASK-004 | VMamba-T referans gecikme ölçümü (PyTorch + özel CUDA çekirdeği) | 🤝 | M | PENDING | TASK-003 |
+| TASK-003 | RTX 5070 ortamı: `nvidia-smi` VRAM doğrulama + CUDA/torch + **`mamba-ssm` derleme testi** — *hibrit: opsiyonel, CUDA eksenini açar* | 🧑 | M | PENDING (paralel) | - |
+| TASK-004 | Referans gecikme ölçümü — **Mac'te** PyTorch eager (CPU+MPS), saf-torch selective scan; CUDA hücresi TASK-003 gelince eklenir | 🤝 | M | PENDING | TASK-002 |
 | TASK-005 | ONNX export denemesi — hata mesajları, graf boyutu, yükleme süresi belgelenir | 🤝 | M | PENDING | TASK-004 |
-| TASK-006 | ONNX Runtime ölçümü (CPU + CUDA EP) → **ilk yavaşlama oranı** | 🤝 | M | PENDING | TASK-005 |
-| TASK-007 | CoreML export + M5 Pro / ANE ölçümü | 🤝 | M | PENDING | TASK-002, TASK-005 |
+| TASK-006 | ONNX Runtime ölçümü (CPU; CUDA EP → TASK-003 sonrası) → **ilk yavaşlama oranı** | 🤝 | M | PENDING | TASK-005 |
+| TASK-007 | CoreML export + M5 / ANE ölçümü | 🤝 | M | PENDING | TASK-002, TASK-005 |
 | TASK-008 | **KARAR NOKTASI** — `tez-docs/oncul-dogrulama.md`: öncül doğrulandı mı? | 🤝 | S | PENDING | TASK-006, TASK-007 |
 | TASK-009 | Ölçüm harness'ı: ısınma, senkronizasyon, termal bekleme, NVML/`powermetrics`, istatistik (medyan/std/P99) | 🤖 | L | PENDING | TASK-008 |
 | TASK-010 | Harness doğrulaması — ResNet-50 ile bilinen sayılar üretiliyor mu? | 🤝 | M | PENDING | TASK-009 |
