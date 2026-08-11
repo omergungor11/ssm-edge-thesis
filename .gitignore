@@ -1,0 +1,36 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+
+# Ortam
+.env
+.env.*
+
+# Model ağırlıkları ve export'lar (büyük ikili dosyalar)
+checkpoints/
+*.pth
+*.pt
+*.safetensors
+*.onnx
+*.mlpackage/
+*.mlmodelc/
+
+# Veri kümeleri
+data/
+datasets/
+
+# NOT: results/raw/ BİLEREK dahil — ham ölçümler tezin kanıtıdır, git'te saklanır
+
+# macOS / editör
+.DS_Store
+.idea/
+.vscode/
+
+# Log ve geçici
+*.log
+!*build.log
+tmp/
