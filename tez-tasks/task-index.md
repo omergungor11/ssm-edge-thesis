@@ -8,15 +8,15 @@
 
 | Faz | Ad | Hafta | Total | Done | In Progress | Pending | Blocked |
 |-----|-----|-------|-------|------|-------------|---------|---------|
-| 0 | Öncül doğrulama + ölçüm altyapısı | 1-2 | 11 | 9 | 2 | 0 | 0 |
+| 0 | Öncül doğrulama + ölçüm altyapısı | 1-2 | 11 | 10 | 1 | 0 | 0 |
 | 1 | Model edinimi + doğruluk doğrulama *(revize)* | 3-4 | 7 | 0 | 0 | 7 | 0 |
 | 2 | Apple dağıtım yığını matrisi ← *kalp* | 5-7 | 5 | 0 | 0 | 5 | 0 |
 | 3 | Nicemlemenin yoğun tahmine transferi | 8-10 | 5 | 0 | 0 | 5 | 0 |
 | 4 | ANE-dostu yeniden formülasyon ← *riskli* | 11-13 | 4 | 0 | 0 | 4 | 0 |
 | 5 | Yazım ve toparlama | 14-16 | 5 | 0 | 0 | 5 | 0 |
-| **Total** | | | **37** | **9** | **2** | **26** | **0** |
+| **Total** | | | **37** | **10** | **1** | **26** | **0** |
 
-**Progress**: 9/37 (%24) — Faz 0 bitmek üzere (kalan: veri boru hattı) · **Öncül doğrulandı** (`tez-docs/oncul-dogrulama.md`) · *TASK-006: CoreML EP hücresi Faz 2'ye devredildi
+**Progress**: 10/37 (%27) — **FAZ 0 TAMAM** (TASK-007 kısmî: Xcode ANE doğrulaması Faz 2'de) → Faz 1'e geçildi · **Öncül doğrulandı** (`tez-docs/oncul-dogrulama.md`) · *TASK-006: CoreML EP hücresi Faz 2'ye devredildi
 
 ### Kim sütunu
 
@@ -45,7 +45,7 @@
 | TASK-008 | **KARAR NOKTASI** — `tez-docs/oncul-dogrulama.md`: öncül doğrulandı mı? | 🤝 | S | ✅ DONE — **doğrulandı (rafine)** | TASK-006, TASK-007 |
 | TASK-009 | Ölçüm harness'ı: ısınma, senkronizasyon, termal bekleme, `powermetrics` (ops.), istatistik | 🤖 | L | ✅ DONE — `src/benchmark/` | TASK-008 |
 | TASK-010 | Harness doğrulaması — ResNet-50 ile bilinen sayılar üretiliyor mu? | 🤝 | M | ✅ DONE — desen + %1.2 tekrar | TASK-009 |
-| TASK-011 | Veri kümesi boru hattı: ADE20K (⬇ iniyor), Cityscapes (hesap gerekli — 🧑), ImageNet alt kümesi | 🤖 | M | 🔶 IN PROGRESS | TASK-002 |
+| TASK-011 | Veri kümesi boru hattı: ADE20K ✅ (20210+2000, loader doğrulandı) · Cityscapes → 🧑 hesap · ImageNet alt kümesi → Faz 3 başında | 🤖 | M | ✅ DONE | TASK-002 |
 | TASK-012 | Bölüm 3.5 (Ölçüm protokolü) taslağı — ~4 sayfa | 🤖 | M | ✅ DONE (v1) — `tez/bolum-3.5-olcum-protokolu.md` | TASK-009 |
 
 > **Karar noktası (TASK-008):** Yavaşlama gözlemlendi mi? **Evet** → devam. **Hayır** → konuyu ANE/CoreML eksenine daralt (bkz. `deney-plani.md` çıkış yolları). Bu bir başarısızlık değil, ucuz bir keşif.
