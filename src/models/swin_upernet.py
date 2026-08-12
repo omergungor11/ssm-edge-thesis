@@ -178,7 +178,14 @@ class PatchEmbed(nn.Module):
 
     def forward(self, x: torch.Tensor) -> tuple[torch.Tensor, tuple[int, int]]:
         x = self.projection(x)
-        hw = (x.shape[2], x.shape[3])
+        # int(...) zorunlu: trace'te 0-dim tensör kalırsa downstream view/pad
+        # hesapları aten::Int düğümü üretiyor ve CoreML dönüşümü çöküyor.
+        # Export modunda tamamen statik boyut kullanılır.
+        from models.vmamba_upernet import EXPORT_INPUT_SIZE
+        if EXPORT_INPUT_SIZE:
+            hw = (EXPORT_INPUT_SIZE // 4, EXPORT_INPUT_SIZE // 4)
+        else:
+            hw = (int(x.shape[2]), int(x.shape[3]))
         return self.norm(x.flatten(2).transpose(1, 2)), hw
 
 
@@ -211,7 +218,9 @@ class SwinUPerNet(nn.Module):
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         logits = self.decode_head(self.backbone(x))
-        return F.interpolate(logits, size=x.shape[2:], mode="bilinear", align_corners=False)
+        from models.vmamba_upernet import EXPORT_INPUT_SIZE
+        tgt = (EXPORT_INPUT_SIZE, EXPORT_INPUT_SIZE) if EXPORT_INPUT_SIZE else (int(x.shape[2]), int(x.shape[3]))
+        return F.interpolate(logits, size=tgt, mode="bilinear", align_corners=False)
 
 
 def load_pretrained(ckpt_path: Path = CKPT) -> SwinUPerNet:

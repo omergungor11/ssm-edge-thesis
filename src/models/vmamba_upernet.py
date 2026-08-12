@@ -34,17 +34,60 @@ class ConvBNReLU(nn.Module):
         return F.relu(self.bn(self.conv(x)), inplace=True)
 
 
+# Export modunda tüm shape okumalarını ortadan kaldıran statik girdi boyutu.
+# torch.jit.trace, girdiye bağlı int(x.shape[i]) okumalarını aten::Int düğümüne
+# çevirir ve coremltools tam-model grafında bunlardan birinde çöker (TypeError).
+# Girdi boyutu export'ta sabit olduğundan boyutlar buradan türetilir.
+EXPORT_INPUT_SIZE: int | None = None
+
+
+def _adaptive_avg_pool_static(x: torch.Tensor, s: int) -> torch.Tensor:
+    """adaptive_avg_pool2d'nin statik-dilimli eşdeğeri (sabit H,W için birebir aynı).
+
+    Export modunda kullanılır: adaptive_avg_pool2d, çıktı girdiyi tam bölmediğinde
+    (16→3, 16→6) ne ONNX TorchScript exporter'ı ne CoreML tarafından destekleniyor.
+    PyTorch tanımıyla aynı pencere sınırları: start=floor(i*H/s), end=ceil((i+1)*H/s).
+    """
+    if EXPORT_INPUT_SIZE:
+        H = W = EXPORT_INPUT_SIZE // 32  # PSP yalnızca en derin ölçekte çalışır
+    else:
+        H, W = int(x.shape[2]), int(x.shape[3])
+    rows = []
+    for i in range(s):
+        h0, h1 = (i * H) // s, -((-(i + 1) * H) // s)
+        cols = []
+        for j in range(s):
+            w0, w1 = (j * W) // s, -((-(j + 1) * W) // s)
+            cols.append(x[:, :, h0:h1, w0:w1].mean(dim=(2, 3), keepdim=True))
+        rows.append(torch.cat(cols, dim=3))
+    return torch.cat(rows, dim=2)
+
+
 class PSPModule(nn.Module):
-    """mmseg PPM hücresi: AdaptiveAvgPool + ConvModule → anahtar '{i}.1.*'"""
+    """mmseg PPM hücresi: AdaptiveAvgPool + ConvModule → anahtar '{i}.1.*'
+
+    export_mode=True iken statik-dilimli pooling kullanılır (numerik eşdeğer).
+    """
+
+    export_mode: bool = False  # sınıf düzeyinde global anahtar
 
     def __init__(self, scale: int, cin: int, cout: int):
         super().__init__()
+        self.scale = scale
         self.add_module("0", nn.AdaptiveAvgPool2d(scale))
         self.add_module("1", ConvBNReLU(cin, cout, 1))
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
-        y = getattr(self, "1")(getattr(self, "0")(x))
-        return F.interpolate(y, size=x.shape[2:], mode="bilinear", align_corners=False)
+        if PSPModule.export_mode:
+            p = _adaptive_avg_pool_static(x, self.scale)
+        else:
+            p = getattr(self, "0")(x)
+        y = getattr(self, "1")(p)
+        if EXPORT_INPUT_SIZE:
+            tgt = (EXPORT_INPUT_SIZE // 32, EXPORT_INPUT_SIZE // 32)
+        else:
+            tgt = (int(x.shape[2]), int(x.shape[3]))
+        return F.interpolate(y, size=tgt, mode="bilinear", align_corners=False)
 
 
 class UPerHead(nn.Module):
@@ -63,10 +106,18 @@ class UPerHead(nn.Module):
         laterals = [conv(feats[i]) for i, conv in enumerate(self.lateral_convs)]
         laterals.append(self.bottleneck(psp))
         for i in range(len(laterals) - 1, 0, -1):
+            if EXPORT_INPUT_SIZE:
+                e = EXPORT_INPUT_SIZE // (4 * 2 ** (i - 1))
+                tgt = (e, e)
+            else:
+                tgt = (int(laterals[i - 1].shape[2]), int(laterals[i - 1].shape[3]))
             laterals[i - 1] = laterals[i - 1] + F.interpolate(
-                laterals[i], size=laterals[i - 1].shape[2:], mode="bilinear", align_corners=False)
+                laterals[i], size=tgt, mode="bilinear", align_corners=False)
         outs = [self.fpn_convs[i](laterals[i]) for i in range(len(laterals) - 1)] + [laterals[-1]]
-        size0 = outs[0].shape[2:]
+        if EXPORT_INPUT_SIZE:
+            size0 = (EXPORT_INPUT_SIZE // 4, EXPORT_INPUT_SIZE // 4)
+        else:
+            size0 = (int(outs[0].shape[2]), int(outs[0].shape[3]))
         outs = [outs[0]] + [F.interpolate(o, size=size0, mode="bilinear", align_corners=False)
                             for o in outs[1:]]
         return self.conv_seg(self.fpn_bottleneck(torch.cat(outs, dim=1)))
@@ -88,7 +139,11 @@ class VMambaUPerNet(nn.Module):
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         logits = self.decode_head(self.backbone(x))
-        return F.interpolate(logits, size=x.shape[2:], mode="bilinear", align_corners=False)
+        if EXPORT_INPUT_SIZE:
+            tgt = (EXPORT_INPUT_SIZE, EXPORT_INPUT_SIZE)
+        else:
+            tgt = (int(x.shape[2]), int(x.shape[3]))
+        return F.interpolate(logits, size=tgt, mode="bilinear", align_corners=False)
 
 
 def load_pretrained(ckpt_path: Path = CKPT) -> VMambaUPerNet:

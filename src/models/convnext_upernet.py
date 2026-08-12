@@ -78,7 +78,9 @@ class ConvNeXtUPerNet(nn.Module):
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         logits = self.decode_head(self.backbone(x))
-        return F.interpolate(logits, size=x.shape[2:], mode="bilinear", align_corners=False)
+        from models.vmamba_upernet import EXPORT_INPUT_SIZE
+        tgt = (EXPORT_INPUT_SIZE, EXPORT_INPUT_SIZE) if EXPORT_INPUT_SIZE else (int(x.shape[2]), int(x.shape[3]))
+        return F.interpolate(logits, size=tgt, mode="bilinear", align_corners=False)
 
 
 def load_pretrained(ckpt_path: Path = CKPT) -> ConvNeXtUPerNet:
