@@ -42,19 +42,22 @@ class WindowMSA(nn.Module):
         self.qkv = nn.Linear(dim, dim * 3)
         self.proj = nn.Linear(dim, dim)
 
-    def forward(self, x: torch.Tensor, mask: torch.Tensor | None) -> torch.Tensor:
-        B, N, C = x.shape
-        qkv = self.qkv(x).reshape(B, N, 3, self.num_heads, C // self.num_heads)
+    def forward(self, x: torch.Tensor, mask: torch.Tensor | None,
+                dim: int, nw: int) -> torch.Tensor:
+        # Trace-dostu: x.shape okunmaz — N/C/nw Python int olarak dışarıdan gelir,
+        # batch boyutu her yerde -1 (aksi hâlde aten::Int → CoreML çöküyor).
+        N = self.window * self.window
+        hd = dim // self.num_heads
+        qkv = self.qkv(x).reshape(-1, N, 3, self.num_heads, hd)
         q, k, v = qkv.permute(2, 0, 3, 1, 4).unbind(0)
         attn = (q * self.scale) @ k.transpose(-2, -1)
         bias = self.relative_position_bias_table[
             self.relative_position_index.view(-1)].view(N, N, -1)
         attn = attn + bias.permute(2, 0, 1)[None]
         if mask is not None:
-            nw = mask.shape[0]
-            attn = attn.view(B // nw, nw, self.num_heads, N, N) + mask[None, :, None]
+            attn = attn.view(-1, nw, self.num_heads, N, N) + mask[None, :, None]
             attn = attn.view(-1, self.num_heads, N, N)
-        x = (attn.softmax(-1) @ v).transpose(1, 2).reshape(B, N, C)
+        x = (attn.softmax(-1) @ v).transpose(1, 2).reshape(-1, N, dim)
         return self.proj(x)
 
 
@@ -66,23 +69,22 @@ class ShiftWindowMSA(nn.Module):
         self.window, self.shift = window, shift
         self.w_msa = WindowMSA(dim, num_heads, window)
 
-    def _partition(self, x: torch.Tensor) -> torch.Tensor:  # (B,H,W,C) -> (nW*B,ws*ws,C)
-        B, H, W, C = x.shape
+    def _partition(self, x: torch.Tensor, H: int, W: int, C: int) -> torch.Tensor:
+        """(B,H,W,C) -> (nW*B,ws*ws,C) — H/W/C Python int, shape okunmaz."""
         ws = self.window
-        x = x.view(B, H // ws, ws, W // ws, ws, C).permute(0, 1, 3, 2, 4, 5)
+        x = x.view(-1, H // ws, ws, W // ws, ws, C).permute(0, 1, 3, 2, 4, 5)
         return x.reshape(-1, ws * ws, C)
 
-    def _reverse(self, wins: torch.Tensor, H: int, W: int) -> torch.Tensor:
+    def _reverse(self, wins: torch.Tensor, H: int, W: int, C: int) -> torch.Tensor:
         ws = self.window
-        B = wins.shape[0] // (H // ws * W // ws)
-        x = wins.view(B, H // ws, W // ws, ws, ws, -1).permute(0, 1, 3, 2, 4, 5)
-        return x.reshape(B, H, W, -1)
+        x = wins.view(-1, H // ws, W // ws, ws, ws, C).permute(0, 1, 3, 2, 4, 5)
+        return x.reshape(-1, H, W, C)
 
-    def forward(self, x: torch.Tensor, hw: tuple[int, int]) -> torch.Tensor:
-        B, L, C = x.shape
+    def forward(self, x: torch.Tensor, hw: tuple[int, int], dim: int) -> torch.Tensor:
         H, W = hw
+        C = dim
         ws, sh = self.window, self.shift
-        x = x.view(B, H, W, C)
+        x = x.view(-1, H, W, C)
         pad_r, pad_b = (ws - W % ws) % ws, (ws - H % ws) % ws
         if pad_r or pad_b:
             x = F.pad(x, (0, 0, 0, pad_r, 0, pad_b))
@@ -97,14 +99,15 @@ class ShiftWindowMSA(nn.Module):
                 for wsl in (slice(0, -ws), slice(-ws, -sh), slice(-sh, None)):
                     img_mask[:, hs, wsl] = cnt
                     cnt += 1
-            mw = self._partition(img_mask).view(-1, ws * ws)
+            mw = self._partition(img_mask, Hp, Wp, 1).view(-1, ws * ws)
             mask = mw[:, None] - mw[:, :, None]
             mask = mask.masked_fill(mask != 0, -100.0)
 
-        x = self._reverse(self.w_msa(self._partition(x), mask), Hp, Wp)
+        nw = (Hp // ws) * (Wp // ws)
+        x = self._reverse(self.w_msa(self._partition(x, Hp, Wp, C), mask, C, nw), Hp, Wp, C)
         if sh > 0:
             x = torch.roll(x, (sh, sh), dims=(1, 2))
-        return x[:, :H, :W].reshape(B, L, C)
+        return x[:, :H, :W].reshape(-1, H * W, C)
 
 
 class FFN(nn.Module):
@@ -122,13 +125,14 @@ class FFN(nn.Module):
 class SwinBlock(nn.Module):
     def __init__(self, dim: int, num_heads: int, window: int, shift: int, mlp_ratio: float = 4.0):
         super().__init__()
+        self.dim = dim
         self.norm1 = nn.LayerNorm(dim)
         self.attn = ShiftWindowMSA(dim, num_heads, window, shift)
         self.norm2 = nn.LayerNorm(dim)
         self.ffn = FFN(dim, int(dim * mlp_ratio))
 
     def forward(self, x: torch.Tensor, hw: tuple[int, int]) -> torch.Tensor:
-        x = x + self.attn(self.norm1(x), hw)
+        x = x + self.attn(self.norm1(x), hw, self.dim)
         return x + self.ffn(self.norm2(x))
 
 
@@ -141,9 +145,9 @@ class PatchMerging(nn.Module):
         self.norm = nn.LayerNorm(4 * dim)
 
     def forward(self, x: torch.Tensor, hw: tuple[int, int]) -> tuple[torch.Tensor, tuple[int, int]]:
-        B, L, C = x.shape
         H, W = hw
-        x = x.transpose(1, 2).view(B, C, H, W)
+        C = self.norm.normalized_shape[0] // 4
+        x = x.transpose(1, 2).view(-1, C, H, W)
         if H % 2 or W % 2:  # corner pad (mmcv AdaptivePadding)
             x = F.pad(x, (0, W % 2, 0, H % 2))
         x = F.unfold(x, kernel_size=2, stride=2)  # (B, 4C, L') kanal-major

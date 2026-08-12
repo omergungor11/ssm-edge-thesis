@@ -73,3 +73,10 @@
 {"timestamp": "2026-08-12T17:57:40.845200+00:00", "model": "swin", "format": "coreml", "stage": "trace", "input": [1, 3, 512, 512], "peak_rss_gb": 5.31, "ok": true, "s": 3.7}
 {"timestamp": "2026-08-12T17:57:40.845490+00:00", "model": "swin", "format": "coreml", "stage": "convert", "input": [1, 3, 512, 512], "peak_rss_gb": 5.31, "status": "started"}
 {"timestamp": "2026-08-12T17:57:41.108777+00:00", "model": "swin", "format": "coreml", "stage": "convert", "input": [1, 3, 512, 512], "peak_rss_gb": 5.32, "ok": false, "s": 0.3, "error": "TypeError: only 0-dimensional arrays can be converted to Python scalars"}
+{"timestamp": "2026-08-12T18:03:33.393224+00:00", "model": "swin", "format": "coreml", "stage": "model_load", "input": [1, 3, 512, 512], "peak_rss_gb": 0.68, "ok": true, "s": 0.1}
+{"timestamp": "2026-08-12T18:03:34.322753+00:00", "model": "swin", "format": "coreml", "stage": "psp_export_mode", "input": [1, 3, 512, 512], "peak_rss_gb": 3.3, "max_abs_diff": 1.526e-05, "ok": true}
+{"timestamp": "2026-08-12T18:03:35.035256+00:00", "model": "swin", "format": "coreml", "stage": "trace", "input": [1, 3, 512, 512], "peak_rss_gb": 3.4, "status": "started"}
+{"timestamp": "2026-08-12T18:03:38.794337+00:00", "model": "swin", "format": "coreml", "stage": "trace", "input": [1, 3, 512, 512], "peak_rss_gb": 4.73, "ok": true, "s": 3.8}
+{"timestamp": "2026-08-12T18:03:38.794828+00:00", "model": "swin", "format": "coreml", "stage": "convert", "input": [1, 3, 512, 512], "peak_rss_gb": 4.73, "status": "started"}
+{"timestamp": "2026-08-12T18:03:48.076673+00:00", "model": "swin", "format": "coreml", "stage": "convert", "input": [1, 3, 512, 512], "peak_rss_gb": 5.47, "ok": true, "s": 9.3}
+{"timestamp": "2026-08-12T18:03:52.483615+00:00", "model": "swin", "format": "coreml", "stage": "first_predict", "input": [1, 3, 512, 512], "peak_rss_gb": 5.47, "ok": true, "s": 4.41}
