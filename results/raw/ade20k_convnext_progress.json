@@ -1,0 +1,10 @@
+{
+  "timestamp": "2026-08-12T17:37:51.498349+00:00",
+  "model": "convnext",
+  "done": 2000,
+  "total": 2000,
+  "mIoU": 45.42,
+  "aAcc": 80.81,
+  "sec_per_img": 1.55,
+  "classes_seen": 150
+}

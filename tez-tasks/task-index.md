@@ -9,14 +9,14 @@
 | Faz | Ad | Hafta | Total | Done | In Progress | Pending | Blocked |
 |-----|-----|-------|-------|------|-------------|---------|---------|
 | 0 | Öncül doğrulama + ölçüm altyapısı | 1-2 | 11 | 10 | 1 | 0 | 0 |
-| 1 | Model edinimi + doğruluk doğrulama *(revize)* | 3-4 | 7 | 2 | 2 | 3 | 0 |
+| 1 | Model edinimi + doğruluk doğrulama *(revize)* | 3-4 | 7 | 7 | 0 | 0 | 0 |
 | 2 | Apple dağıtım yığını matrisi ← *kalp* | 5-7 | 5 | 0 | 0 | 5 | 0 |
 | 3 | Nicemlemenin yoğun tahmine transferi | 8-10 | 5 | 0 | 0 | 5 | 0 |
 | 4 | ANE-dostu yeniden formülasyon ← *riskli* | 11-13 | 4 | 0 | 0 | 4 | 0 |
 | 5 | Yazım ve toparlama | 14-16 | 5 | 0 | 0 | 5 | 0 |
-| **Total** | | | **37** | **12** | **2** | **23** | **0** |
+| **Total** | | | **37** | **17** | **0** | **20** | **0** |
 
-**Progress**: 12/37 (%32) — Faz 1: VMamba-T doğrulandı (mIoU 48.33), Swin-T/ConvNeXt-T yükleyicileri sırada · **Öncül doğrulandı** (`tez-docs/oncul-dogrulama.md`) · *TASK-006: CoreML EP hücresi Faz 2'ye devredildi
+**Progress**: 17/37 (%46) — **FAZ 1 TAMAM** (3 omurga doğrulandı, Tablo 4.1 yazıldı) → Faz 2: Apple dağıtım yığını matrisi · **Öncül doğrulandı** (`tez-docs/oncul-dogrulama.md`) · *TASK-006: CoreML EP hücresi Faz 2'ye devredildi
 
 ### Kim sütunu
 
@@ -62,11 +62,11 @@
 |----|------|-----|-----------|--------|-------------|
 | TASK-013 | Değerlendirme boru hattı: ADE20K val + mIoU hesabı | 🤖 | L | ✅ DONE — `src/models/eval_ade20k.py` | TASK-011 |
 | TASK-014 | VMamba-T checkpoint doğrulaması | 🤖 | M | ✅ DONE — **mIoU 48.33 ≈ bildirilen 48.3** | TASK-013 |
-| TASK-015 | DeiT/Swin-T checkpoint'i — aynı doğrulama | 🤖 | M | PENDING | TASK-013 |
-| TASK-016 | ConvNeXt-T checkpoint'i — aynı doğrulama | 🤖 | M | PENDING | TASK-013 |
-| TASK-017 | EfficientViM (verimli SSM referansı) — checkpoint varsa ekle, yoksa gerekçeyle düş | 🤖 | M | PENDING | TASK-013 |
-| TASK-018 | **Tablo 4.1 — model kartları:** param/GFLOPs/mIoU (bildirilen vs bizim doğruladığımız) + Pareto çerçevesi | 🤖 | M | PENDING | TASK-014..017 |
-| TASK-019 | Bölüm 2 (Kuramsal temeller) yazımı — literatür okurken paralel, biriktirme | 🤖 | L | PENDING | - |
+| TASK-015 | Swin-T doğrulaması | 🤖 | M | ✅ DONE — **mIoU 44.32 ≈ 44.41** | TASK-013 |
+| TASK-016 | ConvNeXt-T doğrulaması | 🤖 | M | ✅ DONE — **mIoU 45.42** (46.11 slide; −0.69 protokol farkı) | TASK-013 |
+| TASK-017 | EfficientViM | 🤖 | M | ✅ DONE — **gerekçeyle kapsam dışı** (FPN başlık, reçete uyumsuz; bkz. Tablo 4.1) | TASK-013 |
+| TASK-018 | **Tablo 4.1 — model kartları** + Pareto çerçevesi | 🤖 | M | ✅ DONE — `tez/bolum-4.1-model-kartlari.md` (GFLOPs → Faz 2 başı) | TASK-014..017 |
+| TASK-019 | Bölüm 2 (Kuramsal temeller) yazımı | 🤖 | L | ✅ DONE (v1) — `tez/bolum-2-kuramsal-temeller.md` 6.9K kelime | - |
 
 **Risk:** VMamba'nın saf-torch fallback'i Mac'te çok yavaşsa mIoU doğrulaması alt-küme (ör. 500 görüntü) üzerinden yapılır — tam val seti yerine, gerekçesi yazılır.
 
