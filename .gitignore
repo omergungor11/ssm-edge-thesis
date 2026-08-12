@@ -34,3 +34,4 @@ datasets/
 *.log
 !*build.log
 tmp/
+third_party/

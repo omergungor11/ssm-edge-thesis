@@ -1,11 +1,14 @@
 # Mac (M5 Pro) ortamı — CoreML/ANE ölçüm ayağı
 # Python 3.12 (uv venv). Sürümler kurulumdan sonra `uv pip freeze` ile lock'lanacak.
-torch
-torchvision
 coremltools
+einops==0.8.2
+fvcore==0.1.5.post20221221
+numpy
 onnx
 onnxruntime
-numpy
 pillow
-timm
 psutil
+timm
+timm==1.0.28
+torch
+torchvision
