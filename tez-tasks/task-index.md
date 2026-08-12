@@ -9,14 +9,14 @@
 | Faz | Ad | Hafta | Total | Done | In Progress | Pending | Blocked |
 |-----|-----|-------|-------|------|-------------|---------|---------|
 | 0 | Öncül doğrulama + ölçüm altyapısı | 1-2 | 11 | 10 | 1 | 0 | 0 |
-| 1 | Model edinimi + doğruluk doğrulama *(revize)* | 3-4 | 7 | 0 | 0 | 7 | 0 |
+| 1 | Model edinimi + doğruluk doğrulama *(revize)* | 3-4 | 7 | 2 | 2 | 3 | 0 |
 | 2 | Apple dağıtım yığını matrisi ← *kalp* | 5-7 | 5 | 0 | 0 | 5 | 0 |
 | 3 | Nicemlemenin yoğun tahmine transferi | 8-10 | 5 | 0 | 0 | 5 | 0 |
 | 4 | ANE-dostu yeniden formülasyon ← *riskli* | 11-13 | 4 | 0 | 0 | 4 | 0 |
 | 5 | Yazım ve toparlama | 14-16 | 5 | 0 | 0 | 5 | 0 |
-| **Total** | | | **37** | **10** | **1** | **26** | **0** |
+| **Total** | | | **37** | **12** | **2** | **23** | **0** |
 
-**Progress**: 10/37 (%27) — **FAZ 0 TAMAM** (TASK-007 kısmî: Xcode ANE doğrulaması Faz 2'de) → Faz 1'e geçildi · **Öncül doğrulandı** (`tez-docs/oncul-dogrulama.md`) · *TASK-006: CoreML EP hücresi Faz 2'ye devredildi
+**Progress**: 12/37 (%32) — Faz 1: VMamba-T doğrulandı (mIoU 48.33), Swin-T/ConvNeXt-T yükleyicileri sırada · **Öncül doğrulandı** (`tez-docs/oncul-dogrulama.md`) · *TASK-006: CoreML EP hücresi Faz 2'ye devredildi
 
 ### Kim sütunu
 
@@ -60,8 +60,8 @@
 
 | ID | Task | Kim | Complexity | Status | Dependencies |
 |----|------|-----|-----------|--------|-------------|
-| TASK-013 | Değerlendirme boru hattı: ADE20K val + mIoU hesabı (UPerNet başlıklı hazır modeller) | 🤖 | L | PENDING | TASK-011 |
-| TASK-014 | VMamba-T ADE20K checkpoint'ini indir, Mac'te yükle, **bildirilen mIoU'yu doğrula** | 🤖 | M | PENDING | TASK-013 |
+| TASK-013 | Değerlendirme boru hattı: ADE20K val + mIoU hesabı | 🤖 | L | ✅ DONE — `src/models/eval_ade20k.py` | TASK-011 |
+| TASK-014 | VMamba-T checkpoint doğrulaması | 🤖 | M | ✅ DONE — **mIoU 48.33 ≈ bildirilen 48.3** | TASK-013 |
 | TASK-015 | DeiT/Swin-T checkpoint'i — aynı doğrulama | 🤖 | M | PENDING | TASK-013 |
 | TASK-016 | ConvNeXt-T checkpoint'i — aynı doğrulama | 🤖 | M | PENDING | TASK-013 |
 | TASK-017 | EfficientViM (verimli SSM referansı) — checkpoint varsa ekle, yoksa gerekçeyle düş | 🤖 | M | PENDING | TASK-013 |

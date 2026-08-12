@@ -1,9 +1,9 @@
 {
-  "timestamp": "2026-08-12T08:11:33.554475+00:00",
-  "done": 25,
+  "timestamp": "2026-08-12T09:40:59.956909+00:00",
+  "done": 2000,
   "total": 2000,
-  "mIoU": 26.3,
-  "aAcc": 81.29,
-  "sec_per_img": 3.01,
-  "classes_seen": 76
+  "mIoU": 48.33,
+  "aAcc": 81.97,
+  "sec_per_img": 2.72,
+  "classes_seen": 150
 }
