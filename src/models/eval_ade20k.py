@@ -1,14 +1,18 @@
-"""ADE20K val mIoU doğrulaması (TASK-014).
+"""ADE20K val mIoU doğrulaması (TASK-014/015/016).
 
-Kullanım: python eval_ade20k.py [N]   (N: alt-küme boyutu, varsayılan 250)
+Kullanım: python eval_ade20k.py [N] [--model vmamba|swin|convnext]
+  N: alt-küme boyutu (varsayılan 250); model varsayılanı vmamba.
 
 Protokol: en-boy korumalı yeniden boyutlandırma (kısa kenar 512), /32'ye
 yansıma pad'i, logit'ler pad'siz bölgeden alınır. mmseg 'whole' moduna yakın;
-kare-resize sapması yok. Bildirilen değer (VMamba-T v2seg): mIoU ~48.
-İlerleme her 25 görüntüde results/raw/ade20k_miou_progress.json'a yazılır.
+kare-resize sapması yok. Bildirilen: VMamba-T ~48.3, Swin-T ~44.4,
+ConvNeXt-T ~46.1 (ConvNeXt bildirileni 'slide' mod iledir).
+İlerleme her 25 görüntüde results/raw/ade20k_{model}_progress.json'a yazılır
+(vmamba geriye-uyum: ade20k_miou_progress.json / ade20k_conf_nN.npy).
 """
 from __future__ import annotations
 
+import argparse
 import json
 import sys
 import time
@@ -23,9 +27,20 @@ from PIL import Image
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "src"))
 from data.ade20k import ADE_DIR, IGNORE_INDEX, MEAN, NUM_CLASSES, STD
-from models.vmamba_upernet import load_pretrained
 
 RAW = ROOT / "results" / "raw"
+MODELS = ("vmamba", "swin", "convnext")
+
+
+def get_loader(name: str):
+    """Model yükleyicisini tembel import et (vmamba, third_party yolu gerektirir)."""
+    if name == "vmamba":
+        from models.vmamba_upernet import load_pretrained
+    elif name == "swin":
+        from models.swin_upernet import load_pretrained
+    else:
+        from models.convnext_upernet import load_pretrained
+    return load_pretrained
 SHORT = 512
 LONG_MAX = 2048
 
@@ -45,8 +60,16 @@ def prep(img: Image.Image) -> tuple[torch.Tensor, tuple[int, int]]:
 
 
 def main() -> None:
-    n_subset = int(sys.argv[1]) if len(sys.argv) > 1 else 250
-    model = load_pretrained()
+    ap = argparse.ArgumentParser()
+    ap.add_argument("n_subset", nargs="?", type=int, default=250)
+    ap.add_argument("--model", choices=MODELS, default="vmamba")
+    args = ap.parse_args()
+    n_subset = args.n_subset
+    # vmamba çıktı adları geriye uyumlu (TASK-014 dosyalarının üzerine yazılmaz
+    # olduğu gibi korunur); diğer modeller model-adlı ayrı dosyalara yazar.
+    tag = "" if args.model == "vmamba" else f"{args.model}_"
+    progress_file = RAW / (f"ade20k_{tag}progress.json" if tag else "ade20k_miou_progress.json")
+    model = get_loader(args.model)()
     img_dir = ADE_DIR / "images" / "validation"
     ann_dir = ADE_DIR / "annotations" / "validation"
     ids = sorted(p.stem for p in img_dir.glob("*.jpg"))[:n_subset]
@@ -76,16 +99,17 @@ def main() -> None:
             el = time.perf_counter() - t_start
             prog = {
                 "timestamp": datetime.now(timezone.utc).isoformat(),
+                "model": args.model,
                 "done": i + 1, "total": len(ids),
                 "mIoU": round(miou, 2), "aAcc": round(acc, 2),
                 "sec_per_img": round(el / (i + 1), 2),
                 "classes_seen": int((union > 0).sum()),
             }
-            (RAW / "ade20k_miou_progress.json").write_text(json.dumps(prog, indent=2))
+            progress_file.write_text(json.dumps(prog, indent=2))
             print(f"{i+1}/{len(ids)}  mIoU={miou:.2f}  aAcc={acc:.2f}  "
                   f"({el/(i+1):.1f} s/img)", flush=True)
 
-    np.save(RAW / f"ade20k_conf_n{len(ids)}.npy", conf)
+    np.save(RAW / f"ade20k_conf_{tag}n{len(ids)}.npy", conf)
     print("TAMAM", flush=True)
 
 

@@ -1,0 +1,10 @@
+{
+  "timestamp": "2026-08-12T17:33:30.014227+00:00",
+  "model": "swin",
+  "done": 2000,
+  "total": 2000,
+  "mIoU": 44.32,
+  "aAcc": 80.38,
+  "sec_per_img": 1.42,
+  "classes_seen": 150
+}
