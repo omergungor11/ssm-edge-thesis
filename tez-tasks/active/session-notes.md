@@ -1,5 +1,33 @@
 # Session Notes
 
+## 2026-08-11/12 — Session 3 (uzun oturum: revizyon + Faz 0 + Faz 1 açılışı)
+
+### Completed
+- [x] TASK-003: İPTAL — 5070'e erişim yok; plan **Mac-only**'ye revize edildi (`tez-plans/revizyon-mac-only.md`)
+- [x] TASK-004/005/006: Öncül mikrobenchmark (MiniMamba, L=196 + L=1024)
+- [x] TASK-008: KARAR NOKTASI — öncül **rafine haliyle doğrulandı**: darboğaz çıkarımda değil araç zincirinde (`tez-docs/oncul-dogrulama.md`)
+- [x] TASK-009: Ölçüm harness'ı `src/benchmark/` (termal kontrol, yığın-agnostik runner'lar, JSONL)
+- [x] TASK-010: ResNet-50 doğrulaması — tekrar sapması ≤%1.2. Kilit kontrast: ResNet-50 CoreML dönüşümü 2.5 sn vs MiniMamba 94 dk
+- [x] TASK-011: ADE20K + `src/data/ade20k.py` (20210+2000)
+- [x] TASK-012: Bölüm 3.5 taslağı `tez/bolum-3.5-olcum-protokolu.md` (4 katmanlı maliyet modeli)
+- [x] TASK-013 (kısmen) + TASK-014: VMamba-T+UPerNet Mac'te çalışıyor — mmseg'siz yükleyici, missing=0/unexpected=0. Alt-küme (250): mIoU 39.0 (yanlı, tırmanıyor), **aAcc 83.3 ≈ bildirilen** ✓
+
+### In Progress (arka plan)
+- [ ] TASK-014: Tam 2000-görüntü mIoU (~2 sa) — ilerleme `results/raw/ade20k_miou_progress.json`
+- [ ] TASK-015/016: Swin-T + ConvNeXt-T checkpoint indirmeleri → `checkpoints/`
+
+### Next Session
+- [ ] Tam mIoU sonucu (bildirilen ~48'e yakınsadı mı?) → TASK-014 kapat
+- [ ] Swin-T / ConvNeXt-T anahtar-uyumlu yükleyiciler (UPerHead hazır, sadece backbone eşlemesi)
+- [ ] TASK-017: EfficientViM checkpoint araştır; DeiT-S mmseg checkpoint var mı bak
+- [ ] Enerji ölçümü için kullanıcıdan sudo'lu oturum iste (powermetrics)
+
+### Notes / Kararlar
+- **VMamba upstream 2 CPU yaması** → `tez-docs/vmamba-yamalari.md`; `[TEZ YAMASI]` etiketli, third_party git dışı. Bulgu: resmî repo CPU-only'de import edilemiyor
+- **Config tuzağı:** v2seg tiny gerçek mimari depths=(2,2,5,2), ssm_ratio=2.0 — yayınlanan config yanıltıcı, ağırlık şekillerinden çıkarıldı
+- VMamba-T 512² CPU ~3.6 s/img (saf-torch scan); CNN ~50-200 ms — özel çekirdek bedeli gerçek modelde doğrulandı
+- Cityscapes hesabı kullanıcıda bekliyor (Faz 2 sonuna kadar lazım değil)
+
 ## 2026-08-11 — Session 2
 
 ### Completed
