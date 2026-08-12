@@ -80,3 +80,17 @@
 {"timestamp": "2026-08-12T18:03:38.794828+00:00", "model": "swin", "format": "coreml", "stage": "convert", "input": [1, 3, 512, 512], "peak_rss_gb": 4.73, "status": "started"}
 {"timestamp": "2026-08-12T18:03:48.076673+00:00", "model": "swin", "format": "coreml", "stage": "convert", "input": [1, 3, 512, 512], "peak_rss_gb": 5.47, "ok": true, "s": 9.3}
 {"timestamp": "2026-08-12T18:03:52.483615+00:00", "model": "swin", "format": "coreml", "stage": "first_predict", "input": [1, 3, 512, 512], "peak_rss_gb": 5.47, "ok": true, "s": 4.41}
+{"timestamp": "2026-08-12T18:04:20.613370+00:00", "model": "vmamba", "format": "onnx", "stage": "model_load", "input": [1, 3, 512, 512], "peak_rss_gb": 0.83, "ok": true, "s": 1.1}
+{"timestamp": "2026-08-12T18:04:24.537283+00:00", "model": "vmamba", "format": "onnx", "stage": "psp_export_mode", "input": [1, 3, 512, 512], "peak_rss_gb": 4.11, "max_abs_diff": 1.335e-05, "ok": true}
+{"timestamp": "2026-08-12T18:04:24.537635+00:00", "model": "vmamba", "format": "onnx", "stage": "export", "input": [1, 3, 512, 512], "peak_rss_gb": 4.11, "status": "started"}
+{"timestamp": "2026-08-12T18:13:22.350672+00:00", "model": "vmamba", "format": "onnx", "stage": "export", "input": [1, 3, 512, 512], "peak_rss_gb": 6.42, "ok": true, "s": 537.8, "size_mb": 858.4}
+{"timestamp": "2026-08-12T18:13:25.565522+00:00", "model": "vmamba", "format": "onnx", "stage": "graph", "input": [1, 3, 512, 512], "peak_rss_gb": 6.65, "num_nodes": 390758, "loop_scan": 0, "top_ops": {"Gather": 139798, "Constant": 63686, "Add": 46673, "Mul": 46616, "Einsum": 46614, "Unsqueeze": 46592}}
+{"timestamp": "2026-08-12T18:13:25.655501+00:00", "model": "vmamba", "format": "onnx", "stage": "ort_load", "input": [1, 3, 512, 512], "peak_rss_gb": 6.65, "status": "started"}
+{"timestamp": "2026-08-12T18:25:30.615826+00:00", "model": "vmamba", "format": "onnx", "stage": "ort_load", "input": [1, 3, 512, 512], "peak_rss_gb": 6.65, "ok": true, "s": 724.9}
+{"timestamp": "2026-08-12T18:25:31.815733+00:00", "model": "vmamba", "format": "onnx", "stage": "ort_first_run", "input": [1, 3, 512, 512], "peak_rss_gb": 6.65, "ok": true, "s": 1.2}
+{"timestamp": "2026-08-12T18:25:34.961898+00:00", "model": "vmamba", "format": "coreml", "stage": "model_load", "input": [1, 3, 512, 512], "peak_rss_gb": 0.83, "ok": true, "s": 1.4}
+{"timestamp": "2026-08-12T18:25:39.572444+00:00", "model": "vmamba", "format": "coreml", "stage": "psp_export_mode", "input": [1, 3, 512, 512], "peak_rss_gb": 3.79, "max_abs_diff": 1.621e-05, "ok": true}
+{"timestamp": "2026-08-12T18:25:39.760446+00:00", "model": "vmamba", "format": "coreml", "stage": "trace", "input": [1, 3, 512, 512], "peak_rss_gb": 3.79, "status": "started"}
+{"timestamp": "2026-08-12T18:41:32.159531+00:00", "model": "vmamba", "format": "coreml", "stage": "trace", "input": [1, 3, 512, 512], "peak_rss_gb": 4.52, "ok": true, "s": 952.4}
+{"timestamp": "2026-08-12T18:41:32.165880+00:00", "model": "vmamba", "format": "coreml", "stage": "convert", "input": [1, 3, 512, 512], "peak_rss_gb": 4.52, "status": "started"}
+{"timestamp": "2026-08-12T18:51:06.936697+00:00", "model": "vmamba", "format": "coreml", "stage": "convert", "input": [1, 3, 512, 512], "peak_rss_gb": 4.52, "ok": false, "s": 574.8, "error": "TypeError: only 0-dimensional arrays can be converted to Python scalars"}
