@@ -1,6 +1,6 @@
-"""Export matrisi — tek hücre (TASK-020).
+"""Export matrisi — tek hücre (TASK-020/021).
 
-Kullanım: python export_cell.py <model> <format>
+Kullanım: python export_cell.py <model> <format> [boyut=512]
   model : vmamba | swin | convnext
   format: onnx | coreml
 
@@ -24,7 +24,7 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "src"))
 RAW = ROOT / "results" / "raw"
 OUT = RAW / "export_matrix.jsonl"
-SIZE = 512
+SIZE = 512  # argv[3] ile değişir (çözünürlük taraması)
 
 
 def log(model: str, fmt: str, stage: str, **data) -> None:
@@ -48,7 +48,10 @@ def load_model(name: str):
 
 
 def main() -> None:
+    global SIZE
     model_name, fmt = sys.argv[1], sys.argv[2]
+    if len(sys.argv) > 3:
+        SIZE = int(sys.argv[3])
     x = torch.randn(1, 3, SIZE, SIZE)
 
     t0 = time.perf_counter()

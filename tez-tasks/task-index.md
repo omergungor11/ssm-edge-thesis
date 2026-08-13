@@ -10,13 +10,13 @@
 |-----|-----|-------|-------|------|-------------|---------|---------|
 | 0 | Öncül doğrulama + ölçüm altyapısı | 1-2 | 11 | 10 | 1 | 0 | 0 |
 | 1 | Model edinimi + doğruluk doğrulama *(revize)* | 3-4 | 7 | 7 | 0 | 0 | 0 |
-| 2 | Apple dağıtım yığını matrisi ← *kalp* | 5-7 | 5 | 0 | 0 | 5 | 0 |
+| 2 | Apple dağıtım yığını matrisi ← *kalp* | 5-7 | 5 | 1 | 1 | 3 | 0 |
 | 3 | Nicemlemenin yoğun tahmine transferi | 8-10 | 5 | 0 | 0 | 5 | 0 |
 | 4 | ANE-dostu yeniden formülasyon ← *riskli* | 11-13 | 4 | 0 | 0 | 4 | 0 |
 | 5 | Yazım ve toparlama | 14-16 | 5 | 0 | 0 | 5 | 0 |
-| **Total** | | | **37** | **17** | **0** | **20** | **0** |
+| **Total** | | | **37** | **18** | **1** | **18** | **0** |
 
-**Progress**: 17/37 (%46) — **FAZ 1 TAMAM** (3 omurga doğrulandı, Tablo 4.1 yazıldı) → Faz 2: Apple dağıtım yığını matrisi · **Öncül doğrulandı** (`tez-docs/oncul-dogrulama.md`) · *TASK-006: CoreML EP hücresi Faz 2'ye devredildi
+**Progress**: 18/37 (%49) — Faz 2: export matrisi TAMAM, ölçüm matrisi koşuyor (ANE enerji kanıtı alındı) · **Öncül doğrulandı** (`tez-docs/oncul-dogrulama.md`) · *TASK-006: CoreML EP hücresi Faz 2'ye devredildi
 
 ### Kim sütunu
 
@@ -78,8 +78,8 @@
 
 | ID | Task | Kim | Complexity | Status | Dependencies |
 |----|------|-----|-----------|--------|-------------|
-| TASK-020 | Export matrisi: 4 omurga × Apple yığınları (PyTorch eager CPU/MPS, `torch.compile`, ORT CPU EP, **ORT CoreML EP**, CoreML CPU/GPU/ANE). **Başarısız export'lar da belgelenir** | 🤝 | L | PENDING | TASK-018 |
-| TASK-021 | Tam gecikme/bellek/enerji ölçümü (`powermetrics`) + çözünürlük taraması (256/512/768/1024) | 🤝 | L | PENDING | TASK-020, TASK-010 |
+| TASK-020 | Export matrisi | 🤝 | L | ✅ DONE — `tez-docs/export-matrisi.md` (VMamba: ONNX 390K düğüm/12dk yükleme, CoreML ❌; compile/CoreML-EP → 021'e) | TASK-018 |
+| TASK-021 | Tam gecikme/bellek/enerji ölçümü + çözünürlük taraması | 🤝 | L | 🔶 IN PROGRESS — 512 gecikme+enerji tamam (ANE kanıtı!); tarama koşuyor | TASK-020, TASK-010 |
 | TASK-022 | Operatör seviyesi profilleme: `Loop` yükü, bellek kopyaları, füzyon kaçırmaları | 🤝 | L | PENDING | TASK-021 |
 | TASK-023 | **ANE yürütme oranı doğrulaması** (Xcode profili) — model gerçekten ANE'de mi çalışıyor? | 🧑 | M | PENDING | TASK-021 |
 | TASK-024 | Bölüm 4.2 (AS1) + 4.3 (AS2) yazımı | 🤖 | L | PENDING | TASK-022, TASK-023 |
