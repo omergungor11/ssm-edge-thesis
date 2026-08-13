@@ -106,7 +106,25 @@ Enerji imzası bulgusu katman-düzeyinde doğrulandı: ConvNeXt **tamamen** ANE'
 Swin'in tek op'u bile ANE'ye atanmamış. Ek bulgu: ANE reddi yükleme katmanına da
 yansıyor (Swin load 5.6 s = ConvNeXt'in ~40×). Ekran görüntüleri EK C için saklanacak.
 
+### VMamba ONNX — çözünürlük ölçeklemesi (13 Ağustos)
+
+| | 256² (L=4 096) | 512² (L=16 384) | 1024² (L=65 536) |
+|---|---|---|---|
+| Export süresi | 121 s | 538 s | **✗ tamamlanamadı** |
+| Graf boyutu | 386.6 MB | 858.4 MB | — |
+| Graf düğümü | 98 918 | 390 758 | — (beklenen ~1.5M) |
+| ORT yükleme | 46.2 s | 724.9 s | — |
+| Tepe bellek | 4.5 GB | 6.4 GB | **~65 GB → manuel sonlandırma** |
+
+**1024² sonucu:** Export, 24 GB fiziksel RAM'in ~2.7 katı belleğe (swap dahil ~65 GB)
+şişip makineyi kullanılamaz hâle getirdiği için 10+ dakikada manuel sonlandırıldı.
+Protobuf 2 GB sınırına ulaşılamadan **bellek duvarına çarpıldı** — "yüksek çözünürlükte
+SSM omurgası ONNX'e pratikte export edilemez" bulgusunun ikinci, daha erken mekanizması.
+Klasik omurgalarda aynı işlem her çözünürlükte saniyeler/megabaytlar mertebesinde.
+
+Eager 1024² (karşılaştırma için): VMamba MPS 6 041 ms, CPU 13 889 ms.
+⚠ VMamba CPU 768 kaydı (13.3 s) 1024 değeriyle (13.9 s) tutarsız görünüyor —
+eşzamanlı yük kirliliği şüphesi, yeniden doğrulanacak.
+
 ### Kalan hücreler
-Çözünürlük taraması (256/768/1024, eager) ve VMamba ONNX 256/1024 export'ları koşuyor;
-VMamba ORT ölçümü, `torch.compile`, ORT CoreML EP sıradaki turlarda. ANE resmî kanıtı:
-TASK-023 Xcode raporu (kullanıcı).
+VMamba ORT gecikme ölçümü, `torch.compile`, ORT CoreML EP → sıradaki turlar.
