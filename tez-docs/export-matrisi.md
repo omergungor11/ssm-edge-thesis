@@ -92,6 +92,20 @@ SSM → CoreML'e giremiyor; eager'da ConvNeXt-ANE'nin **25 katı** enerji.
 MPS eager desteklemiyor; statik-dilim eşdeğeriyle çözüldü. Aynı operatör: ONNX
 exporter ✗, CoreML ✗, MPS ✗.
 
+### TASK-023 — Xcode Performance Report (13 Ağustos, resmî ANE kanıtı)
+
+| | ConvNeXt-T | Swin-T | VMamba-T |
+|---|---|---|---|
+| **ANE op sayısı** | **353 / 353 (%100)** | **0 / 631 (%0)** | — (dönüşemiyor) |
+| CPU / GPU op | 0 / 0 | 138 / 493 | — |
+| Prediction (medyan) | 115.64 ms | 98.27 ms | — |
+| Load | 142.39 ms | **5 596.28 ms** | — |
+| Compilation | 694.15 ms | 151.45 ms | — |
+
+Enerji imzası bulgusu katman-düzeyinde doğrulandı: ConvNeXt **tamamen** ANE'de,
+Swin'in tek op'u bile ANE'ye atanmamış. Ek bulgu: ANE reddi yükleme katmanına da
+yansıyor (Swin load 5.6 s = ConvNeXt'in ~40×). Ekran görüntüleri EK C için saklanacak.
+
 ### Kalan hücreler
 Çözünürlük taraması (256/768/1024, eager) ve VMamba ONNX 256/1024 export'ları koşuyor;
 VMamba ORT ölçümü, `torch.compile`, ORT CoreML EP sıradaki turlarda. ANE resmî kanıtı:
