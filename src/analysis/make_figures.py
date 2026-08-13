@@ -113,13 +113,13 @@ def fig_pareto(lat: dict[tuple[str, str, int], float]) -> None:
                 ax.scatter(ms, MIOU[model], s=130, color=color, zorder=5,
                            edgecolors="black", linewidths=0.8,
                            label=MODEL_LABEL[model])
-                ax.annotate(STACK_LABEL[stack], (ms, MIOU[model]),
+                ax.annotate(STACK_LABEL.get(stack, stack), (ms, MIOU[model]),
                             textcoords="offset points", xytext=(0, 10),
                             ha="center", fontsize=9, color=color, fontweight="bold")
                 n_best += 1
             else:
                 ax.scatter(ms, MIOU[model], s=28, color=color, alpha=0.35, zorder=3)
-                ax.annotate(STACK_LABEL[stack], (ms, MIOU[model]),
+                ax.annotate(STACK_LABEL.get(stack, stack), (ms, MIOU[model]),
                             textcoords="offset points", xytext=(0, -12),
                             ha="center", fontsize=7.5, color=color, alpha=0.75)
                 n_other += 1
@@ -163,7 +163,7 @@ def fig_scaling(lat: dict[tuple[str, str, int], float]) -> None:
         marker = "s" if stack == "torch_cpu" else "o"
         ax.plot(xs, ys, ls, marker=marker, color=MODEL_COLOR[model],
                 markersize=6, linewidth=1.6,
-                label=f"{MODEL_LABEL[model]} · {STACK_LABEL[stack]}")
+                label=f"{MODEL_LABEL[model]} · {STACK_LABEL.get(stack, stack)}")
         n_pts += len(xs)
     ax.set_yscale("log")
     ax.set_xticks(list(resolutions))
