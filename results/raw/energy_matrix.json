@@ -1,0 +1,191 @@
+{
+  "timestamp": "2026-08-13T16:08:29.157327",
+  "idle_baseline": {
+    "cpu_mw": 3287.2,
+    "gpu_mw": 8541.7,
+    "ane_mw": 0.0,
+    "n_samples": 70
+  },
+  "cells": [
+    {
+      "label": "swin/coreml_all",
+      "t0": 1786626429.292928,
+      "t1": 1786626431.095668,
+      "runs": 20,
+      "ms_per_inf": 90.14,
+      "power": {
+        "cpu_mw": 6931.9,
+        "gpu_mw": 11627.7,
+        "ane_mw": 0.0,
+        "n_samples": 9
+      },
+      "net_power_mw": 6730.7,
+      "mj_per_inf": 606.7
+    },
+    {
+      "label": "swin/coreml_cpu_and_gpu",
+      "t0": 1786626432.042805,
+      "t1": 1786626433.558377,
+      "runs": 20,
+      "ms_per_inf": 75.78,
+      "power": {
+        "cpu_mw": 5064.4,
+        "gpu_mw": 11104.2,
+        "ane_mw": 0.0,
+        "n_samples": 5
+      },
+      "net_power_mw": 4339.7,
+      "mj_per_inf": 328.9
+    },
+    {
+      "label": "swin/coreml_cpu_only",
+      "t0": 1786626436.284457,
+      "t1": 1786626441.301779,
+      "runs": 10,
+      "ms_per_inf": 501.73,
+      "power": {
+        "cpu_mw": 12306.3,
+        "gpu_mw": 5755.3,
+        "ane_mw": 0.0,
+        "n_samples": 23
+      },
+      "net_power_mw": 6232.7,
+      "mj_per_inf": 3127.1
+    },
+    {
+      "label": "swin/torch_mps",
+      "t0": 1786626442.834919,
+      "t1": 1786626445.791629,
+      "runs": 15,
+      "ms_per_inf": 197.11,
+      "power": {
+        "cpu_mw": 6437.4,
+        "gpu_mw": 11394.9,
+        "ane_mw": 0.0,
+        "n_samples": 14
+      },
+      "net_power_mw": 6003.4,
+      "mj_per_inf": 1183.3
+    },
+    {
+      "label": "swin/torch_cpu",
+      "t0": 1786626448.486091,
+      "t1": 1786626453.910002,
+      "runs": 8,
+      "ms_per_inf": 677.99,
+      "power": {
+        "cpu_mw": 12803.9,
+        "gpu_mw": 5169.2,
+        "ane_mw": 0.0,
+        "n_samples": 24
+      },
+      "net_power_mw": 6144.2,
+      "mj_per_inf": 4165.7
+    },
+    {
+      "label": "convnext/coreml_all",
+      "t0": 1786626456.987412,
+      "t1": 1786626458.898593,
+      "runs": 20,
+      "ms_per_inf": 95.56,
+      "power": {
+        "cpu_mw": 7962.9,
+        "gpu_mw": 4784.2,
+        "ane_mw": 3878.7,
+        "n_samples": 9
+      },
+      "net_power_mw": 4796.9,
+      "mj_per_inf": 458.4
+    },
+    {
+      "label": "convnext/coreml_cpu_and_gpu",
+      "t0": 1786626459.744551,
+      "t1": 1786626461.3937879,
+      "runs": 20,
+      "ms_per_inf": 82.46,
+      "power": {
+        "cpu_mw": 7208.7,
+        "gpu_mw": 10605.8,
+        "ane_mw": 0.0,
+        "n_samples": 9
+      },
+      "net_power_mw": 5985.6,
+      "mj_per_inf": 493.6
+    },
+    {
+      "label": "convnext/coreml_cpu_only",
+      "t0": 1786626464.064973,
+      "t1": 1786626468.324089,
+      "runs": 10,
+      "ms_per_inf": 425.91,
+      "power": {
+        "cpu_mw": 13065.9,
+        "gpu_mw": 5064.5,
+        "ane_mw": 0.0,
+        "n_samples": 19
+      },
+      "net_power_mw": 6301.5,
+      "mj_per_inf": 2683.9
+    },
+    {
+      "label": "convnext/torch_mps",
+      "t0": 1786626469.464781,
+      "t1": 1786626472.054731,
+      "runs": 15,
+      "ms_per_inf": 172.66,
+      "power": {
+        "cpu_mw": 8302.3,
+        "gpu_mw": 8954.6,
+        "ane_mw": 0.0,
+        "n_samples": 14
+      },
+      "net_power_mw": 5428.0,
+      "mj_per_inf": 937.2
+    },
+    {
+      "label": "convnext/torch_cpu",
+      "t0": 1786626474.41195,
+      "t1": 1786626480.274173,
+      "runs": 8,
+      "ms_per_inf": 732.78,
+      "power": {
+        "cpu_mw": 13344.2,
+        "gpu_mw": 4309.7,
+        "ane_mw": 0.0,
+        "n_samples": 54
+      },
+      "net_power_mw": 5825.0,
+      "mj_per_inf": 4268.4
+    },
+    {
+      "label": "vmamba/torch_mps",
+      "t0": 1786626483.357884,
+      "t1": 1786626490.2097018,
+      "runs": 8,
+      "ms_per_inf": 856.48,
+      "power": {
+        "cpu_mw": 8689.1,
+        "gpu_mw": 8795.6,
+        "ane_mw": 0.0,
+        "n_samples": 66
+      },
+      "net_power_mw": 5655.8,
+      "mj_per_inf": 4844.1
+    },
+    {
+      "label": "vmamba/torch_cpu",
+      "t0": 1786626493.8956401,
+      "t1": 1786626506.115357,
+      "runs": 5,
+      "ms_per_inf": 2443.94,
+      "power": {
+        "cpu_mw": 10965.0,
+        "gpu_mw": 5659.3,
+        "ane_mw": 0.0,
+        "n_samples": 124
+      },
+      "net_power_mw": 4795.4,
+      "mj_per_inf": 11719.7
+    }
+  ]
+}
