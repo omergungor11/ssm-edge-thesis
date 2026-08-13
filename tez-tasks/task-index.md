@@ -10,13 +10,13 @@
 |-----|-----|-------|-------|------|-------------|---------|---------|
 | 0 | Öncül doğrulama + ölçüm altyapısı | 1-2 | 11 | 10 | 1 | 0 | 0 |
 | 1 | Model edinimi + doğruluk doğrulama *(revize)* | 3-4 | 7 | 7 | 0 | 0 | 0 |
-| 2 | Apple dağıtım yığını matrisi ← *kalp* | 5-7 | 5 | 2 | 1 | 2 | 0 |
+| 2 | Apple dağıtım yığını matrisi ← *kalp* | 5-7 | 5 | 4 | 0 | 1 | 0 |
 | 3 | Nicemlemenin yoğun tahmine transferi | 8-10 | 5 | 0 | 0 | 5 | 0 |
 | 4 | ANE-dostu yeniden formülasyon ← *riskli* | 11-13 | 4 | 0 | 0 | 4 | 0 |
 | 5 | Yazım ve toparlama | 14-16 | 5 | 0 | 0 | 5 | 0 |
-| **Total** | | | **37** | **19** | **1** | **17** | **0** |
+| **Total** | | | **37** | **21** | **0** | **16** | **0** |
 
-**Progress**: 19/37 (%51) — Faz 2: ANE kanıtı RESMÎ (Xcode: CNN %100 / ViT %0 / SSM ∅) · **Öncül doğrulandı** (`tez-docs/oncul-dogrulama.md`) · *TASK-006: CoreML EP hücresi Faz 2'ye devredildi
+**Progress**: 21/37 (%57) — Faz 2 ölçüm tarafı TAMAM; kalan: TASK-024 bölüm güncellemesi → Faz 3 · **Öncül doğrulandı** (`tez-docs/oncul-dogrulama.md`) · *TASK-006: CoreML EP hücresi Faz 2'ye devredildi
 
 ### Kim sütunu
 
@@ -79,8 +79,8 @@
 | ID | Task | Kim | Complexity | Status | Dependencies |
 |----|------|-----|-----------|--------|-------------|
 | TASK-020 | Export matrisi | 🤝 | L | ✅ DONE — `tez-docs/export-matrisi.md` (VMamba: ONNX 390K düğüm/12dk yükleme, CoreML ❌; compile/CoreML-EP → 021'e) | TASK-018 |
-| TASK-021 | Tam gecikme/bellek/enerji ölçümü + çözünürlük taraması | 🤝 | L | 🔶 IN PROGRESS — 512 gecikme+enerji tamam (ANE kanıtı!); tarama koşuyor | TASK-020, TASK-010 |
-| TASK-022 | Operatör seviyesi profilleme: `Loop` yükü, bellek kopyaları, füzyon kaçırmaları | 🤝 | L | PENDING | TASK-021 |
+| TASK-021 | Tam gecikme/bellek/enerji ölçümü + çözünürlük taraması | 🤝 | L | ✅ DONE — 7 yığın × 4 çözünürlük + enerji; 1024 ONNX bellek duvarı | TASK-020, TASK-010 |
+| TASK-022 | Operatör seviyesi profilleme | 🤝 | L | ✅ DONE — ORT profilleri: optimizer unroll'u eritiyor, %82 conv; yük 'yükleme' katmanında | TASK-021 |
 | TASK-023 | **ANE yürütme oranı doğrulaması** (Xcode) | 🧑 | M | ✅ DONE — **ConvNeXt %100 ANE, Swin %0** (353/353 vs 0/631) | TASK-021 |
 | TASK-024 | Bölüm 4.2 (AS1) + 4.3 (AS2) yazımı | 🤖 | L | PENDING | TASK-022, TASK-023 |
 

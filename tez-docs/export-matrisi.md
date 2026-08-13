@@ -126,5 +126,23 @@ Eager 1024² (karşılaştırma için): VMamba MPS 6 041 ms, CPU 13 889 ms.
 ⚠ VMamba CPU 768 kaydı (13.3 s) 1024 değeriyle (13.9 s) tutarsız görünüyor —
 eşzamanlı yük kirliliği şüphesi, yeniden doğrulanacak.
 
-### Kalan hücreler
-VMamba ORT gecikme ölçümü, `torch.compile`, ORT CoreML EP → sıradaki turlar.
+### 3. tur (13 Ağustos akşam) — kalan hücreler kapandı
+
+| Hücre | ConvNeXt-T | Swin-T | VMamba-T |
+|---|---|---|---|
+| ORT CoreML EP | 318 ms (47 parça, 427/498 düğüm) | 331 ms (**94 parça**, 600/821) | denenmedi (yükleme maliyeti) |
+| torch.compile (inductor-CPU) | **1 670 ms — eager'dan 2.9× YAVAŞ** | 531 ms (kazanç yok) | **✗ süreç çöküyor** (istisnasız, exit 1) |
+| ORT CPU çıkarım | 644 ms | 714 ms | **618 ms — eager'ın 0.30×'u!** |
+
+**3. turun ana bulgusu:** VMamba'nın ORT çıkarımı (618 ms) yalnızca eager'ından değil,
+klasiklerin ORT'sinden bile hızlı. Operatör profili nedenini gösteriyor: 390K düğümlü
+unroll grafını ORT optimizer'ı yükleme sırasında eritiyor (12 dk yüklemenin nedeni),
+kalan yürütmede zaman conv'larda (%81.7 NhwcFusedConv) — scan'in 139K Gather'ı ilk 8'e
+bile giremiyor. **Maliyet ödeniyor ama yanlış katmanda: her süreç başlatımında 12 dakika.**
+Uç cihaz gerçekliğinde (uygulama açılışı) bu, çıkarım hızının anlamını yok ediyor.
+
+**Diğer:** ORT CoreML EP bölümleme parçalanması (Swin 94 parça → saf CoreML'in 5×
+yavaşı); torch.compile Apple-CPU'da ya nötr ya zararlı, VMamba'da süreci çökertiyor.
+
+**Düzeltme:** VMamba CPU@768 önceki 13.3 s kaydı kirliymiş — temiz koşu **3 980 ms**
+(512→768 ölçekleme ~lineer). 1024 kaydı (13.9 s) bellek baskısı içerebilir, not düşüldü.

@@ -1,0 +1,97 @@
+{
+  "model": "convnext",
+  "runs": 10,
+  "total_node_ms": 8617.6,
+  "top_ops": [
+    {
+      "op": "NhwcFusedConv",
+      "ms": 6785.1,
+      "count": 72,
+      "pct": 78.7
+    },
+    {
+      "op": "Gemm",
+      "ms": 603.4,
+      "count": 432,
+      "pct": 7.0
+    },
+    {
+      "op": "Conv",
+      "ms": 358.3,
+      "count": 264,
+      "pct": 4.2
+    },
+    {
+      "op": "LayerNormalization",
+      "ms": 236.1,
+      "count": 312,
+      "pct": 2.7
+    },
+    {
+      "op": "Resize",
+      "ms": 180.5,
+      "count": 132,
+      "pct": 2.1
+    },
+    {
+      "op": "Gelu",
+      "ms": 166.8,
+      "count": 216,
+      "pct": 1.9
+    },
+    {
+      "op": "Transpose",
+      "ms": 101.9,
+      "count": 636,
+      "pct": 1.2
+    },
+    {
+      "op": "Concat",
+      "ms": 69.7,
+      "count": 216,
+      "pct": 0.8
+    },
+    {
+      "op": "FusedConv",
+      "ms": 49.7,
+      "count": 84,
+      "pct": 0.6
+    },
+    {
+      "op": "Add",
+      "ms": 29.0,
+      "count": 252,
+      "pct": 0.3
+    },
+    {
+      "op": "Slice",
+      "ms": 14.7,
+      "count": 696,
+      "pct": 0.2
+    },
+    {
+      "op": "Mul",
+      "ms": 11.0,
+      "count": 216,
+      "pct": 0.1
+    },
+    {
+      "op": "Reshape",
+      "ms": 5.7,
+      "count": 864,
+      "pct": 0.1
+    },
+    {
+      "op": "ReduceMean",
+      "ms": 4.5,
+      "count": 600,
+      "pct": 0.1
+    },
+    {
+      "op": "Split",
+      "ms": 1.1,
+      "count": 24,
+      "pct": 0.0
+    }
+  ]
+}
