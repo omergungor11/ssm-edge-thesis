@@ -23,7 +23,12 @@ kadarının gerçekleştiğinin ampirik analizi. 16 hafta, hedef bitiş ~30 Kas�
 
 ## Mevcut Durum
 
-**Progress**: 0/38 task (%0) — Faz 0 (öncül doğrulama), Hafta 1.
+**Progress**: 27/37 task (%73) — Faz 0-3 TAMAM (14 Ağu itibarıyla; plana göre ~9 hafta önde).
+**Sıradaki**: Faz 4 (TASK-030..033) — selective scan'in ANE-dostu yeniden formülasyonu
+(**riskli özgün katkı**; kapsam kararı kullanıcıyla konuşulacak) → Faz 5 yazım/toparlama.
+**Ana bulgular**: `tez-docs/export-matrisi.md` + `tez-docs/nicemleme-sonuclari.md` —
+"SSM'in uç engeli sayısal değil yapısal" (CoreML ∅, 1024² bellek duvarı, ORT paradoksu,
+ANE: CNN %100 / ViT %0 / SSM ∅; W8 bedava).
 
 > Her yeni session'da `tez-tasks/task-index.md` oku veya `/cold-start` calistir.
 
