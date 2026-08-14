@@ -35,3 +35,8 @@ datasets/
 !*build.log
 tmp/
 third_party/
+
+# model artefaktlari (yeniden uretilebilir; git disi)
+results/raw/*.onnx
+results/raw/*.mlpackage/
+results/raw/*_int8.onnx
