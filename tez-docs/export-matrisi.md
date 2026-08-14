@@ -122,9 +122,8 @@ Protobuf 2 GB sınırına ulaşılamadan **bellek duvarına çarpıldı** — "y
 SSM omurgası ONNX'e pratikte export edilemez" bulgusunun ikinci, daha erken mekanizması.
 Klasik omurgalarda aynı işlem her çözünürlükte saniyeler/megabaytlar mertebesinde.
 
-Eager 1024² (karşılaştırma için): VMamba MPS 6 041 ms, CPU 13 889 ms.
-⚠ VMamba CPU 768 kaydı (13.3 s) 1024 değeriyle (13.9 s) tutarsız görünüyor —
-eşzamanlı yük kirliliği şüphesi, yeniden doğrulanacak.
+Eager 1024² (karşılaştırma için): VMamba MPS 6 041 ms, CPU 13 889 ms
+(1024 CPU değeri bellek baskısı içerebilir; 768 düzeltmesi için bkz. 3. tur).
 
 ### 3. tur (13 Ağustos akşam) — kalan hücreler kapandı
 

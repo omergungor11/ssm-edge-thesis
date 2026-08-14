@@ -1,13 +1,14 @@
 # 4.2 – 4.3 Verimlilik Sonuçları
 
-*(TASLAK v1 — 13 Ağustos 2026, TASK-024 ön-taslak; ölçümler sürüyor)*
+*(v2 — ölçümler tamamlandı, 13 Ağustos 2026)*
 
 > Bu iki bölüm, Bölüm 4.1'de kimlikleri ve doğrulukları belgelenen üç omurganın
 > (ConvNeXt-T [CNN], Swin-T [Transformer], VMamba-T [SSM]) verimlilik ölçümlerini
 > raporlar. Tüm ölçümler Bölüm 3.5'teki protokole tabidir; ham kayıtlar
-> `results/raw/export_matrix.jsonl` ve `results/raw/energy_matrix.json` dosyalarındadır.
-> Deney matrisi henüz tamamlanmamıştır; eksik hücreler **[ölçüm sürüyor]** ile
-> işaretlenmiş olup bu taslak, ölçümler tamamlandıkça güncellenecektir.
+> `results/raw/` altındadır: `export_matrix.jsonl`, `energy_matrix.json`,
+> `latency_matrix_{convnext,swin,vmamba}.jsonl` ve `ort_profile_*_top.json`.
+> Deney matrisi tamamlanmıştır; v1 taslağındaki **[ölçüm sürüyor]** işaretlerinin
+> tamamı bu sürümde final ölçümlerle doldurulmuştur.
 
 ---
 
@@ -66,8 +67,10 @@ hızlandıramıyor; bu asimetri bir sonraki alt bölümün konusudur.
 Klasiklerin kendi içindeki sıralama da not edilmeye değer: CPU'da Swin-T,
 ConvNeXt-T'den bir miktar hızlıyken (535'e karşı 571 ms) MPS'te sıralama tersine
 dönmektedir (172'ye karşı 152 ms). Fark her iki yönde de küçüktür (%7–13 bandı)
-ve bu taslakta yorumlanmamaktadır; kalıcılığı, çözünürlük taraması
-tamamlandığında (§4.2.4) yeniden değerlendirilecektir. Analizin ana ekseni,
+ve yorumlanmamaktadır; çözünürlük taraması (§4.2.4, Tablo 4.6) bu sıralamanın
+kalıcı olmadığını göstermiştir — klasik ikilinin öncelik sırası arka uca ve
+çözünürlüğe göre değişmektedir (ör. MPS'te 1024²'de Swin öne geçerken 256–768²
+aralığında ConvNeXt öndedir). Analizin ana ekseni,
 klasik ikilinin kendi içindeki küçük farklar değil, ikili ile VMamba arasındaki
 kat düzeyindeki ayrışmadır.
 
@@ -120,9 +123,9 @@ hesaplanmıştır. Ham kayıt: `results/raw/energy_matrix.json`.
 | torch CPU | 4 268 | 4 166 | **11 720** |
 
 *Not: Enerji hücrelerindeki koşular, telemetriyle eşzamanlı yürütülen kısa
-serilerdir (hücre başına 5–20 geçiş); geçiş süreleri bu nedenle Tablo 4.6'daki
+serilerdir (hücre başına 5–20 geçiş); geçiş süreleri bu nedenle Tablo 4.8'deki
 birincil gecikme medyanlarından bir miktar sapar. Gecikme için bağlayıcı değerler
-Tablo 4.6'dır; bu tablo enerji içindir.*
+Tablo 4.8'dir; bu tablo enerji içindir.*
 
 Tabloda üç desen görüyoruz. Birincisi, eager kipte bile mimari farkı enerjiye
 doğrudan yansıyor: VMamba-T'nin çıkarım başına enerjisi CPU'da 11 720 mJ ile
@@ -148,31 +151,84 @@ bir bölümünün genel amaçlı çekirdekler yerine ANE'ye taşınması (ANE ra
 
 ### 4.2.4 Bellek Tepe Noktası ve Çözünürlük Ölçeklendirme
 
-**Bellek.** Çıkarım anındaki tepe bellek (peak RSS) profilleri için kontrollü
-ölçüm turu henüz tamamlanmadı: **[ölçüm sürüyor]**. Eldeki ilk veriler dışa
-aktarma aşamasına aittir ve §4.3.2'de raporlanmaktadır (VMamba ONNX dışa aktarma
-sürecinde tepe RSS 6.65 GB'a ulaşmıştır — 24 GB'lık bir geliştirme makinesinde
-dahi kayda değer bir pay).
+**Bellek.** Kontrollü, tüm-yığınlar bir çıkarım-anı tepe RSS turu bu ölçüm
+kampanyasında yürütülmemiştir; bu paragraf, eldeki iki dolaylı göstergeyi kendi
+sınırlarıyla raporlar. Birinci gösterge, MPS hücrelerinde harness'ın her koşuda
+kaydettiği sürücü tahsis tepe noktasıdır (`torch.mps` ayırıcı tepe değeri —
+süreç RSS'i değil, yalnızca MPS tensör tahsisleri):
+
+**Tablo 4.5 — MPS tahsis tepe noktası (GB), çözünürlüğe göre**
+
+| Çözünürlük | ConvNeXt-T | Swin-T | VMamba-T | VMamba/ConvNeXt |
+|---|---|---|---|---|
+| 512² | 1.23 | 1.23 | **2.43** | 2.0× |
+| 768² | 2.31 | 2.33 | **4.69** | 2.0× |
+| 1024² | 3.92 | 4.03 | **6.11** | 1.6× |
+
+VMamba'nın çıkarım-anı tahsis tepesi her çözünürlükte klasiklerin ~1.5–2
+katıdır: tarama, girdiyle birlikte büyüyen ara durum tensörleri taşımaktadır.
+İkinci gösterge, dışa aktarma/yükleme aşamasının süreç RSS'idir ve §4.3.2'de
+raporlanmaktadır (VMamba ONNX dışa aktarmada 512²'de tepe RSS 6.65 GB; 1024²'de
+~65 GB'a şişerek başarısızlık — bellek duvarı, Tablo 4.11). İki gösterge aynı
+şeyi ölçmez ve doğrudan karşılaştırılmamalıdır; ortak mesajları, bellek
+maliyetinin de gecikme gibi çıkarım ve araç-zinciri katmanlarına asimetrik
+dağıldığıdır.
 
 **Çözünürlük ölçeklendirme.** SSM'lerin teorik cazibesi tam da burada yatar:
 dikkat mekanizmasının O(L²) karmaşıklığına karşılık taramanın O(L) ölçeklenmesi,
 çözünürlük büyüdükçe SSM lehine açılan bir makas vaat eder. Bu vaadin eager
 kipte gerçekleşip gerçekleşmediğini sınamak için 256², 512², 768² ve 1024²
-çözünürlüklerinde gecikme taraması yürütülmektedir: **[ölçüm sürüyor]** —
-512² sütunu Tablo 4.2'deki değerlerdir; diğer üç çözünürlük tamamlandığında
-aşağıdaki şekil doldurulacaktır.
+çözünürlüklerinde gecikme taraması tamamlanmıştır (ham kayıt:
+`latency_matrix_{convnext,swin,vmamba}.jsonl`, `resolution` etiketiyle):
 
-> **Şekil 4.2 — Çözünürlük-gecikme ölçeklendirme eğrileri** *(yer tutucu; ölçüm
-> sürüyor)*. Üç omurganın 256²–1024² aralığındaki eager gecikme eğrileri (CPU ve
-> MPS ayrı panellerde, log-log eksende). Beklenen soru: VMamba'nın O(L) eğim
-> avantajı, sabit-katsayı dezavantajını (özel çekirdek yokluğu) hangi çözünürlükte
-> telafi ediyor — ediyor mu?
+**Tablo 4.6 — Eager gecikme × çözünürlük, yığın 1, fp32, medyan (ms)**
 
-Mikrobenchmark bu çerçeve için bir ön ipucu veriyor (Tablo 4.3): L 5.2× artarken
-MiniMamba'nın eager CPU süresi 3.4×, MPS süresi 3.8× artmıştır — yani izole
-taramanın kendi ölçeklenmesi lineer-altı ve teoriyle uyumludur. Buharlaşmanın
-çıkarım eğiminde değil, başka katmanlarda gerçekleştiği hipotezi (Bölüm 4.3) bu
-gözlemle tutarlıdır.
+| Arka uç | Çözünürlük | ConvNeXt-T | Swin-T | VMamba-T | VMamba/ConvNeXt |
+|---|---|---|---|---|---|
+| MPS | 256² | 38 | 48 | **350** | 9.3× |
+| MPS | 512² | 152 | 172 | **1 008** | 6.6× |
+| MPS | 768² | 356 | 401 | **2 593** | 7.3× |
+| MPS | 1024² | 958 | 761 | **6 041** | 6.3× |
+| CPU | 256² | 278 | 220 | **748** | 2.7× |
+| CPU | 512² | 571 | 535 | **2 032** | 3.6× |
+| CPU | 768² | 3 805ᵃ | 1 232 | **3 980**ᵇ | ~1.0×ᵃ |
+| CPU | 1024² | 5 172 | 8 400ᵃ | **13 889**ᶜ | 2.7× |
+
+ᵃ *Yüksek koşu-içi varyans (ConvNeXt 768² CPU: std ±1.8 s, örnekler 2.1–6.3 s
+bandında; Swin 1024² CPU: std ±1.8 s): ≥768² CPU hücreleri bellek/termal baskıya
+açıktır ve bu satırlardaki oranlar ihtiyatla okunmalıdır.*
+ᵇ *İlk kayıt (13.3 s) kirli çıkmış; temiz yeniden-doğrulama koşusu 3 980 ms
+vermiştir (512→768 ölçekleme ~lineer). Ham dosyada iki kayıt da korunmaktadır
+(`reverify: true` etiketli kayıt geçerlidir).*
+ᶜ *VMamba CPU 1024² değeri (13.9 s) bellek baskısı içerebilir (aynı çözünürlükte
+MPS tahsis tepesi 6.1 GB, Tablo 4.5); üst sınır olarak okunmalıdır.*
+
+Şekil 4.2'nin sorusunun cevabı bu tablodadır: **makas kapanmamaktadır.**
+Güvenilir sinyalin bulunduğu MPS panelinde VMamba/ConvNeXt oranı 256²'den
+1024²'ye 9.3× → 6.6× → 7.3× → 6.3× seyretmektedir — monoton bir kapanma yok,
+~6–9× bandında salınım var; VMamba/Swin oranı 1024²'de tersine büyümektedir
+(7.9×). Piksel sayısı 16× artarken VMamba'nın MPS süresi 17.3× artmıştır (350 →
+6 041 ms): taramanın kendi ölçeklenmesi teoriyle uyumlu biçimde ~lineerdir,
+ancak bu bir avantaj üretmemektedir, çünkü karşılaştırma tabanı da lineer
+ölçeklenmektedir — Swin'in pencereli dikkati zaten O(L)'dir (aynı aralıkta
+15.7×) ve ConvNeXt zaten evrişimseldir (25.4×). Teorik O(L)–O(L²) makası ancak
+*global* dikkate karşı geçerlidir; buradaki pratik rakiplerin hiçbiri global
+dikkat kullanmadığından, eager kipte SSM'e kalan tek fark sabit katsayıdır ve
+özel çekirdek yokluğunda bu katsayı 6–9× aleyhtedir.
+
+> **Şekil 4.2 — Çözünürlük-gecikme ölçeklendirme eğrileri** *(veri tamamlandı —
+> Tablo 4.6; şekil bu tablodan üretilecektir)*. Üç omurganın 256²–1024²
+> aralığındaki eager gecikme eğrileri (CPU ve MPS ayrı panellerde, log-log
+> eksende). Sorunun cevabı: VMamba'nın O(L) eğimi gerçekleşmekte ancak makası
+> kapatmamaktadır — eğriler yaklaşık paralel seyretmekte, aradaki dikey uzaklık
+> (sabit katsayı) hiçbir çözünürlükte telafi edilmemektedir.
+
+Mikrobenchmark bu çerçeve için bir ön ipucu vermişti (Tablo 4.3): L 5.2×
+artarken MiniMamba'nın eager CPU süresi 3.4×, MPS süresi 3.8× artmıştı — izole
+taramanın kendi ölçeklenmesi lineer-altı ve teoriyle uyumlu. Tam model taraması
+bu ipucunu doğrulamıştır: buharlaşma çıkarım eğiminde değildir (eğim hayatta,
+makas kapalı); kayıp, sabit katsayıda ve Bölüm 4.3'ün konusu olan
+çıkarım-öncesi katmanlardadır.
 
 ### 4.2.5 Doğruluk-Verimlilik Düzlemi
 
@@ -182,7 +238,8 @@ Bölüm 4.1'de kurulan çerçeve gereği üç omurga aynı doğrulukta değildir
 hücresi düzlemde bir noktadır.
 
 > **Şekil 4.1 — Doğruluk-gecikme Pareto düzlemi, 512²** *(yer tutucu; matris
-> hücreleri tamamlandığında üretilecek)*. Yatay eksen medyan gecikme (ms, log),
+> hücreleri tamamlandı — Tablo 4.8; şekil bu verilerden üretilecektir)*.
+> Yatay eksen medyan gecikme (ms, log),
 > dikey eksen ADE20K val mIoU. Her omurga için eager CPU/MPS, ORT CPU ve CoreML
 > hücreleri ayrı işaretçilerle; Pareto sınırı çizili. Beklenen okuma: eager
 > düzlemde VMamba doğruluk avantajıyla sınırda yer bulurken, dağıtım yığınları
@@ -202,13 +259,15 @@ varlığı ve büyüklüğüdür.
 arasındaki farkın dağıtım yığınına göre nasıl değiştiğini ve avantajın *nerede*
 buharlaştığını sorar. Bu bölümün ana bulgusu şudur: **buharlaşma çıkarım
 gecikmesinde değil, araç zincirinin çıkarım-öncesi katmanlarında
-gerçekleşmektedir** — dönüşüm süresi, graf boyutu ve yükleme süresi. FLOPs
-tabanlı hiçbir analiz bu katmanları göremez, çünkü FLOPs yalnızca çıkarımın
-aritmetik iş yükünü sayar.
+gerçekleşmektedir** — dönüşüm süresi, graf boyutu ve yükleme süresi. Dahası,
+final ölçümler çıkarım katmanının ORT yolunda SSM *lehine* olduğunu
+göstermektedir (§4.3.1'deki ORT paradoksu); imkânsızlaştıran, diğer
+katmanlardır. FLOPs tabanlı hiçbir analiz bu katmanları göremez, çünkü FLOPs
+yalnızca çıkarımın aritmetik iş yükünü sayar.
 
-Deney matrisinin bugünkü durumu:
+Deney matrisinin nihai durumu:
 
-**Tablo 4.5 — Dağıtım matrisi durumu (512², fp32; torch 2.13 / onnxruntime 1.28 / coremltools 9.0)**
+**Tablo 4.7 — Dağıtım matrisi durumu (512², fp32; torch 2.13 / onnxruntime 1.28 / coremltools 9.0)**
 
 | Omurga | PyTorch eager | ONNX / ORT CPU | CoreML |
 |---|---|---|---|
@@ -221,34 +280,42 @@ Tablo tek başına ilk sonucu veriyor: klasik omurgalar üç yığının üçün
 resmî yola — **hiç girememektedir**. "Dönüşemiyor" bu tezin bugünkü resmî
 durumudur; taramanın export-dostu yeniden formülasyonu (AS4, Faz 4) bu
 başarısızlığı temel çizgi olarak alacaktır. ONNX sütunundaki ✅ ise dipnotuyla
-birlikte okunmalıdır: hücre "çalışıyor" ancak §4.3.2'de gösterileceği gibi
-pratikte dağıtılabilir olmaktan uzak bir maliyet profiliyle çalışıyor.
+birlikte okunmalıdır: hücre "çalışıyor" — final ölçümde çıkarım medyanı eager'dan
+bile hızlı çalışıyor (§4.3.1) — ancak §4.3.2'de gösterileceği gibi pratikte
+dağıtılabilir olmaktan uzak bir maliyet profiliyle: bedel, çıkarımdan yükleme
+katmanına taşınmıştır.
 
 ### 4.3.1 Yığın-Başına Gecikme: Dağıtılabilir-En-İyi Uçurumu
 
-**Tablo 4.6 — Gecikme matrisi, 512², yığın 1, fp32, medyan (ms) — TASK-021 ilk tur**
+**Tablo 4.8 — Gecikme matrisi, 512², yığın 1, fp32, medyan (ms) — TASK-021 (tüm turlar)**
 
 | Yığın | ConvNeXt-T | Swin-T | VMamba-T |
 |---|---|---|---|
 | CoreML CPU+GPU | **63.9** | **63.9** | ❌ |
 | CoreML ALL | 91.4 | 86.0 | ❌ |
 | CoreML CPU_ONLY | 311 | 315 | ❌ |
-| torch MPS (statik PSP) | 152 | 172 | **1 008** |
-| torch CPU | 571 | 535 | **2 032** |
-| ORT CPU | 644 | 714 | [ölçüm sürüyor]¹ |
-| torch.compile | [ölçüm sürüyor] | [ölçüm sürüyor] | [ölçüm sürüyor] |
-| ORT CoreML EP | [ölçüm sürüyor] | [ölçüm sürüyor] | [ölçüm sürüyor] |
+| torch MPS (statik PSP) | 152 | 172 | 1 008 |
+| ORT CoreML EP | 318 | 331 | —² |
+| torch CPU | 571 | 535 | 2 032 |
+| ORT CPU | 644 | 714 | **618**¹ |
+| torch.compile (inductor-CPU) | 1 670 | 531 | **✗ süreç çöküyor**³ |
 
-¹ *VMamba ORT hücresi ayrı bir tur gerektirmektedir: modelin ORT oturumuna
-yüklenmesi tek başına ~12 dakika sürmektedir (§4.3.2) ve ölçüm bu nedenle
-bağımsız bir koşuya planlanmıştır. ORT ilk-koşu değeri (1.2 s, ısınmasız) dışa
-aktarma turundan mevcuttur ancak §3.5 protokolüne uygun medyan değildir.*
+¹ *§3.5 protokolüne uygun medyan (15 zamanlanmış geçiş). Ancak oturum yüklemesi
+bu koşuda 620.7 s, dışa aktarma turunda 724.9 s sürmüştür; değer tek başına
+değil, §4.3.2'deki yükleme maliyetiyle birlikte okunmalıdır.*
+² *Denenmedi: her ORT oturum açılışı ~10–12 dk sürerken EP bölümleme denemesinin
+ek maliyeti pratik bulunmamıştır.*
+³ *İstisna dahi üretmeden süreç çökmesi (exit 1) — derleme katmanının VMamba'daki
+üçüncü kırılma noktası (§4.3.2'deki ONNX unroll ve CoreML TypeError'dan sonra).*
 
 Tablonun kritik okuması sütunlar arası değil, satırlar arasıdır. Her omurga için
 "bugün gerçekten dağıtılabilir en iyi hücre"yi işaretleyelim: ConvNeXt-T ve
-Swin-T için bu, CoreML CPU+GPU hücresidir — **63.9 ms**. VMamba-T için CoreML
-kapalı, ORT pratik-dışı olduğundan en iyi dağıtılabilir hücre MPS eager'dır —
-**1 008 ms**. Aradaki oran **~16×**'dir. Aynı iki model eager CPU'da yalnızca
+Swin-T için bu, CoreML CPU+GPU hücresidir — **63.9 ms**. VMamba-T sütunu ilk
+bakışta bir sürpriz içerir: en düşük medyan artık ORT CPU hücresindedir
+(618 ms). Ancak bu hücreye giriş bileti, her süreç başlatımında ödenen
+~10–12 dakikalık oturum yüklemesidir (§4.3.2); uç dağıtım anlamında pratik
+hücre MPS eager kalır — **1 008 ms**. Aradaki oran **~16×**'dir. Aynı iki model
+eager CPU'da yalnızca
 3.6–3.8× ayrışıyordu (Tablo 4.2): uçurumun 3.6×'ten 16×'e açılmasının kaynağı
 VMamba'nın yavaşlaması değil, **klasiklerin erişebildiği hızlandırma yollarına
 VMamba'nın erişememesidir**. Avantaj tam olarak burada buharlaşıyor: yığın
@@ -260,17 +327,39 @@ hücresinden (63.9 ms) *yavaştır*. "ALL" isteğinin ANE'yi de içeren bir terc
 olduğu, ancak garanti olmadığı hatırlanırsa (§3.5.6) bu sıralama şaşırtıcıdır ve
 §4.3.4'te enerji imzasıyla birlikte açıklanmaktadır.
 
-Üçüncü gözlem: klasiklerde ORT CPU hücresi (644 / 714 ms), eager torch CPU'dan
-(571 / 535 ms) hızlı değildir. Bu ilk turda ORT, klasikler için bir hızlandırma
-basamağı olmaktan çok bir *taşınabilirlik* basamağı olarak konumlanmaktadır;
-CoreML hücrelerinin sağladığı asıl kazanç (535–571 ms → 63.9 ms) ile
-karşılaştırıldığında bu, Apple Silicon'da hızlanmanın genel graf çalışma
-zamanından değil platforma özgü derleyiciden geldiğini düşündürmektedir.
-Mikrobenchmark'ta gözlenen ters yönlü işaret (MiniMamba'da ORT CPU eager'dan
-hızlıydı: L=196'da 13.5'e karşı 17.5 ms) bu ilişkinin model bileşimine bağlı
-olduğunu göstermektedir; tam modellerdeki kalıcılığı sonraki turlarda ve
-`torch.compile` / ORT CoreML EP hücreleri kapandığında netleşecektir
-**[ölçüm sürüyor]**.
+Üçüncü gözlem tablonun en öğretici satırındadır ve bu tezde **ORT paradoksu**
+olarak adlandırılacaktır. Klasiklerde ORT CPU (644 / 714 ms) eager torch CPU'dan
+(571 / 535 ms) hızlı değildir — ORT onlar için bir hızlandırma basamağı değil,
+bir *taşınabilirlik* basamağıdır. VMamba'da ise ORT CPU 618 ms ile eager'ının
+(2 032 ms) yalnızca **0.30×'udur** — dahası klasiklerin ORT hücrelerinden bile
+hızlıdır. Naif beklenti tam tersiydi: 390 758 düğümlük patolojik grafın
+yorumlanması matrisin en yavaş ORT hücresini vermeliydi. Mekanizma §4.3.3'te
+operatör profiliyle gösterilmektedir: ORT'nin graf optimizer'ı, unroll edilmiş
+taramanın düğüm kalabalığını **oturum yüklemesi sırasında** eritmekte —
+12 dakikalık yüklemenin nedeni budur — ve geriye evrişim-ağırlıklı, hızlı bir
+yürütme grafı kalmaktadır (mikrobenchmark'taki işaret, MiniMamba'da ORT'nin
+eager'dan hızlı oluşu, tam modelde de korunmuştur). Yani maliyet buharlaşmamış,
+**katman değiştirmiştir**: (d) çıkarımdan (b) yüklemeye. Bu, "maliyet yanlış
+katmanda ödeniyor" tezinin en keskin örneğidir: yalnızca çıkarım medyanı
+raporlayan bir benchmark bu hücreyi "VMamba ORT'de gayet hızlı" diye özetlerdi;
+uç cihaz gerçekliğinde — uygulama açılışı, bellek baskısıyla model
+boşaltma/yeniden yükleme — her başlatımda 10–12 dakika ödeyen bir modelin
+çıkarım medyanının pratik değeri yoktur.
+
+Dördüncü gözlem `torch.compile` satırıdır: Apple CPU'da inductor arka ucu ya
+nötrdür (Swin 531 ≈ eager 535 ms) ya zararlıdır (ConvNeXt 1 670 ms — eager'dan
+**2.9× yavaş**); VMamba'da ise derleme süreci istisna dahi üretmeden çökmektedir
+(exit 1). PyTorch'un kendi derleme yolu bile SSM taramasını taşıyamamaktadır;
+"derleme katmanı SSM için kırılma noktasıdır" bulgusu böylece üçüncü bağımsız
+araç zincirinde (ONNX exporter, CoreML converter, TorchInductor) tekrarlanmıştır.
+
+Beşinci gözlem ORT CoreML EP satırıdır (318 / 331 ms): CoreML'e ORT üzerinden
+dolaylı erişim, saf CoreML hücresinin (63.9 ms) yaklaşık **5× yavaşındadır**.
+Neden, bölümleme parçalanmasıdır: EP, grafı CoreML'in kabul ettiği alt-graflara
+bölmekte — ConvNeXt'te 47 parça (427/498 düğüm CoreML'de), Swin'de **94 parça**
+(600/821 düğüm) — ve her parça sınırında CPU↔CoreML veri aktarımı ödenmektedir.
+Hızlandırıcıya *kısmî* erişimin, parçalanma yeterince yüksekse kazancı geri
+yiyebildiğinin ölçülmüş örneğidir.
 
 ### 4.3.2 Dört Katmanlı Maliyet Modeli: FLOPs'un Kör Olduğu Katmanlar
 
@@ -278,7 +367,7 @@ Bölüm 3.5'te tanımlanan dört maliyet katmanı — **(a)** dönüşüm/derlem
 **(b)** yükleme süresi, **(c)** dağıtım paketi boyutu, **(d)** çıkarım gecikmesi —
 ONNX yolunda üç omurga için eksiksiz ölçülmüştür:
 
-**Tablo 4.7 — ONNX yolu, dört katman (512², fp32; opset 17, TorchScript exporter)**
+**Tablo 4.9 — ONNX yolu, dört katman (512², fp32; opset 17, TorchScript exporter)**
 
 | Katman | ConvNeXt-T | Swin-T | **VMamba-T** | SSM/CNN oranı |
 |---|---|---|---|---|
@@ -291,9 +380,12 @@ ONNX yolunda üç omurga için eksiksiz ölçülmüştür:
 
 Tablo, tezin ana bulgusunun ilk tam nicel kanıtıdır ve asimetrisi çarpıcıdır:
 katman (d) — literatürün raporladığı tek katman — neredeyse hayatta kalmıştır
-(1.2 s, klasiklerin yalnızca 1.3 katı). Buna karşılık katman (a) 448×, katman (b)
-~7 249× şişmiştir. Bir cümleyle: **çıkarım hızı hayatta kalıyor; araç zinciri
-çöküyor.** Üç modelin ağırlıkları karşılaştırılabilir boyuttayken (~244 MB
+(ilk koşu 1.2 s, klasiklerin yalnızca 1.3 katı). Final medyan ölçümü bu gözlemi
+keskinleştirmiştir: ORT çıkarım medyanı 618 ms ile eager'ın 0.30×'udur (Tablo
+4.8) — katman (d) hayatta kalmakla kalmamış, kazanca dönüşmüştür. Buna karşılık
+katman (a) 448×, katman (b) ~7 249× şişmiştir. Bir cümleyle: **çıkarım hızı
+kazanıyor; araç zinciri çöküyor.** Üç modelin ağırlıkları karşılaştırılabilir
+boyuttayken (~244 MB
 düzeyi) VMamba grafının 858.4 MB'ının **614 MB'ı saf graf yapısıdır** — ağırlık
 değil, serileştirilmiş operatör düğümleri. Katman (c) bu yüzden yalnızca bir
 depolama sorunu değildir; katman (b)'nin nedenidir: ORT, 390 758 düğümlük grafı
@@ -316,7 +408,7 @@ sayısının tersi yönünde (§3.5.7).
 
 CoreML yolunda aynı katmanlar şöyle görünmektedir:
 
-**Tablo 4.8 — CoreML yolu (512², fp32; coremltools 9.0)**
+**Tablo 4.10 — CoreML yolu (512², fp32; coremltools 9.0)**
 
 | Katman | ConvNeXt-T | Swin-T | **VMamba-T** |
 |---|---|---|---|
@@ -330,13 +422,40 @@ ardından dönüşüm, 390K düğümlü grafın derinliklerinde üçüncü-parti
 düğümünde, 574.8 saniye çalıştıktan sonra `TypeError` ile düşmektedir. Aynı hata
 sınıfı bizim kontrolümüzdeki başlık/sarmalayıcı kodunda giderilebilmişti
 (§4.3.5); farkı yaratan, hatalı desenin bu kez elle erişilemeyecek kadar büyük ve
-üretilmiş bir grafın içinde olmasıdır. Çözünürlük ölçeklendirmenin dışa aktarma
-katmanına etkisi (VMamba ONNX 256² ve 1024² exportları) ayrıca
-karakterize edilmektedir: **[ölçüm sürüyor]**.
+üretilmiş bir grafın içinde olmasıdır.
 
-Katman (d)'nin "hayatta kalması" salt bir teselli değildir; mikrobenchmark
-verisi, dönüşümü *başarabilen* bir SSM'in çıkarımda ciddi kazanç elde
-edebildiğini göstermektedir. MiniMamba'da ORT CPU çıkarımı eager torch'un
+Çözünürlük ölçeklendirmenin dışa aktarma katmanına etkisi, VMamba ONNX yolunda
+üç çözünürlükte karakterize edilmiştir:
+
+**Tablo 4.11 — VMamba-T ONNX dışa aktarması × çözünürlük**
+
+| Katman | 256² (L=4 096) | 512² (L=16 384) | 1024² (L=65 536) |
+|---|---|---|---|
+| Export süresi | 121 s | 538 s | **✗ tamamlanamadı** |
+| Graf boyutu | 386.6 MB | 858.4 MB | — |
+| Graf düğüm sayısı | 98 918 | 390 758 | — (beklenen ~1.5M) |
+| ORT yükleme | 46.2 s | 724.9 s | — |
+| Export tepe RSS | 4.5 GB | 6.4 GB | **~65 GB → manuel sonlandırma** |
+
+Düğüm sayısı, mikrobenchmark'ın öngördüğü gibi L ile ~lineer büyümektedir
+(4× piksel → 3.95× düğüm); ORT yüklemesi ise yine süperlineerdir (4× düğüm →
+15.7× yükleme: 46.2 → 724.9 s). Kritik bulgu 1024² sütunundadır: dışa aktarma,
+protobuf'un 2 GB serileştirme sınırına ulaşamadan **bellek duvarına**
+çarpmıştır — süreç, 24 GB fiziksel RAM'in ~2.7 katına (~65 GB, yoğun swap)
+şişerek makineyi kullanılamaz hâle getirdiği için 10 dakikanın ardından elle
+sonlandırılmıştır (ham kayıt: `export_matrix.jsonl`, `terminated_by: "user"`).
+Aynı işlem klasik omurgalarda her çözünürlükte saniyeler ve yüzlerce megabayt
+mertebesindedir. Bulgunun tez açısından ağırlığı şudur: **SSM'in teorik avantaj
+bölgesi — çözünürlük büyüdükçe açılması vaat edilen makas — tam da dışa
+aktarmanın fiziksel olarak imkânsızlaştığı bölgedir.** 256²'de export 2 dakikaya,
+yükleme 46 saniyeye inmektedir; ama 256²'de SSM'in ölçekleme avantajını arayan
+da yoktur. Vaat ile araç zinciri, çözünürlük ekseninde ters yönde
+ölçeklenmektedir.
+
+Katman (d)'nin "hayatta kalması" salt bir teselli değildir; hem tam model hem
+mikrobenchmark, dönüşümü *başarabilen* bir SSM'in çıkarımda ciddi kazanç elde
+edebildiğini göstermektedir. Tam modelde ORT medyanı eager'ın 0.30×'udur
+(618'e karşı 2 032 ms, §4.3.1); MiniMamba'da ORT CPU çıkarımı eager torch'un
 0.77× / 0.68×'i sürede tamamlanmış (L=196'da 13.5'e karşı 17.5 ms, L=1024'te
 40.0'a karşı 59.3 ms), CoreML'e dönüşen model ise ALL hesaplama birimleriyle
 **15–22× hızlanmıştır** (L=196'da 0.79 ms, L=1024'te 3.83 ms). Yani doğru
@@ -355,7 +474,7 @@ standart raporlama pratiğinde görünmezdir.
 Graf patlamasının anatomisi, dışa aktarılan ONNX graflarının operatör dökümünde
 görülebilir (ham kayıt: `export_matrix.jsonl`, `graph` aşaması):
 
-**Tablo 4.9 — ONNX graf operatör dökümü (en kalabalık altı op)**
+**Tablo 4.12 — ONNX graf operatör dökümü (en kalabalık altı op)**
 
 | | ConvNeXt-T (843 düğüm) | Swin-T (8 667 düğüm) | **VMamba-T (390 758 düğüm)** |
 |---|---|---|---|
@@ -382,9 +501,36 @@ yorumlayıcı yükü bilinen bir sorundur; bu yolda aynı hastalık `Loop` yerin
 temsilleri ardışık yinelemeyi ifade etmekte yapısal olarak zorlanmaktadır.
 
 Bu döküm statik graf analizidir; hangi operatörün *çalışma zamanında* ne kadar
-süre tükettiği ayrı sorudur. Operatör-seviyesi çalışma zamanı profillemesi
-(ORT profiler ile düğüm-başına süre dökümü) **[derin profilleme TASK-022'de —
-ölçüm sürüyor]**.
+süre tükettiği ayrı sorudur — ve cevabı, statik resmin neredeyse tam tersidir.
+ORT profiler ile alınan düğüm-başına süre dökümü (TASK-022; ham kayıt:
+`ort_profile_{model}_top.json`):
+
+**Tablo 4.13 — ORT CPU çalışma-zamanı operatör profili (düğüm süresi payı, %)**
+
+| Sıra | ConvNeXt-T | Swin-T | **VMamba-T** |
+|---|---|---|---|
+| 1 | NhwcFusedConv %78.7 | NhwcFusedConv %76.5 | **NhwcFusedConv %81.7** |
+| 2 | Gemm %7.0 | Gemm %7.4 | FusedConv %3.3 |
+| 3 | Conv %4.2 | LayerNormalization %3.1 | Conv %3.1 |
+| 4 | LayerNormalization %2.7 | Transpose %2.7 | LayerNormalization %2.7 |
+| 5 | Resize %2.1 | Resize %2.2 | Resize %2.7 |
+| 6 | Gelu %1.9 | Concat %1.4 | Concat %2.6 |
+
+Statik dökümün baş aktörü çalışma zamanında sahnede yoktur: VMamba grafındaki
+139 798 `Gather`, profilin ilk sekiz — hatta listelenen on iki — operatörüne
+dahi girememektedir; 46 614 `Einsum` da görünmemektedir. Çalışma zamanının
+%81.7'si evrişimlerde geçmekte ve VMamba'nın profili klasiklerin profiliyle
+neredeyse aynı şekli almaktadır. Profildeki işlem sayıları aynı şeyi söyler:
+listelenen on iki operatör türü koşu başına yalnızca ~530 düğüm örneği
+oluşturmaktadır — serileştirilmiş grafta 390 758 düğüm varken (döküm en
+maliyetli operatörlerle sınırlı olsa da, yürütülen grafın serileştirilmiş
+graftan yüzlerce kat küçük olduğu açıktır). Açıklama, §4.3.1'deki ORT
+paradoksunun mekanizmasıdır: ORT'nin graf optimizer'ı (sabit katlama, füzyon),
+unroll edilmiş taramanın düğüm kalabalığını oturum yüklemesi sırasında eritmekte
+ve geriye klasiklere benzeyen, evrişim-ağırlıklı bir yürütme grafı
+bırakmaktadır. 12 dakikalık yükleme bu eritmenin faturasıdır. Maliyet yok
+olmamakta, katman (d)'den katman (b)'ye taşınmaktadır — ve katman (b), her
+süreç başlatımında yeniden ödenmektedir.
 
 ### 4.3.4 ANE Yürütme Analizi: Enerji-İmzası Kanıtı
 
@@ -392,10 +538,12 @@ Apple Silicon'da verimlilik merdiveninin en üst basamağı ANE'dir (Apple Neura
 Engine). Ancak §3.5.6'da belirtildiği gibi CoreML, hesaplama birimini şeffaf
 olmayan biçimde seçer; `compute_units=ALL` bir tercihtir, garanti değil. Bu
 nedenle "hangi model gerçekten ANE'de koşuyor" sorusu doğrudan ölçülmelidir. Bu
-taslakta birincil kanıt, `powermetrics`'in ANE güç rayı telemetrisidir: ANE
-kullanılmıyorsa rayın gücü sıfırdır, kullanılıyorsa aktif güç çekimi görülür.
+bölümde iki bağımsız kanıt kullanılmaktadır: `powermetrics`'in ANE güç rayı
+telemetrisi (ANE kullanılmıyorsa rayın gücü sıfırdır, kullanılıyorsa aktif güç
+çekimi görülür) ve §3.5.6'nın resmî kanıt saydığı Xcode Core ML Performance
+Report'un katman-başına yürütme yeri dökümü (Tablo 4.15).
 
-**Tablo 4.10 — ANE enerji imzası (powermetrics, 200 ms örnekleme, boşta-düşülmüş)**
+**Tablo 4.14 — ANE enerji imzası (powermetrics, 200 ms örnekleme, boşta-düşülmüş)**
 
 | Hücre | ANE gücü (ölçüm penceresi) | mJ/çıkarım | Yorum |
 |---|---|---|---|
@@ -411,7 +559,7 @@ bu tezin **"mimari başına bir kademe"** bulgusu:
 
 1. **CNN (ConvNeXt-T): ANE'ye ulaşıyor.** ALL hücresinde ANE rayı 3 879 mW aktif
    güç çekmektedir ve bu hücre matristeki en düşük enerjiyi (458 mJ/çıkarım)
-   vermektedir. ANE, gecikmede değil (Tablo 4.6'da ALL, CPU+GPU'dan yavaştır)
+   vermektedir. ANE, gecikmede değil (Tablo 4.8'de ALL, CPU+GPU'dan yavaştır)
    enerjide kazandırmaktadır — uç cihaz için asıl önemli olan eksende.
 2. **Transformer (Swin-T): CoreML'e giriyor, ANE'den dönüyor.** Dönüşüm
    başarılıdır; ancak ALL istendiğinde ANE derleyicisi modeli reddetmekte
@@ -429,11 +577,34 @@ farklı basamaklarda kesilmektedir: CNN son basamağa (ANE) çıkmakta, Transfor
 bir alt basamakta (GPU) durmakta, SSM merdivene hiç binememektedir. Enerji
 sıralaması da bu kademelenmeyi birebir izlemektedir.
 
-Protokol notu: §3.5.6 gereği "ANE'de çalışıyor" iddiasının resmî kanıtı Xcode
-Core ML Performance Report'un katman-başına yürütme yeri dökümüdür; buradaki güç
-telemetrisi ve süre-farkı gözlemleri güçlü ama dolaylı kanıtlardır. Xcode
-doğrulaması ve katman-başına ANE yürütme oranı: **[TASK-023 sürüyor]** —
-tamamlandığında bu alt bölüme ANE yürütme oranı sütunu eklenecektir.
+Güç telemetrisi güçlü ama dolaylı bir kanıttır; §3.5.6 gereği "ANE'de
+çalışıyor" iddiasının resmî kanıtı Xcode Core ML Performance Report'un
+katman-başına yürütme yeri dökümüdür. Bu doğrulama TASK-023'te tamamlanmıştır
+ve enerji-imzası okumasını katman düzeyinde, eksiksiz doğrulamaktadır:
+
+**Tablo 4.15 — Xcode Core ML Performance Report (resmî katman-yeri dökümü; ekran görüntüleri EK C)**
+
+| | ConvNeXt-T | Swin-T | VMamba-T |
+|---|---|---|---|
+| ANE'ye atanan op | **353 / 353 (%100)** | **0 / 631 (%0)** | — (dönüşemiyor) |
+| CPU / GPU op | 0 / 0 | 138 / 493 | — |
+| Prediction (medyan) | 115.6 ms | 98.3 ms | — |
+| Load | 142.4 ms | **5 596.3 ms** | — |
+| Compilation | 694.2 ms | 151.5 ms | — |
+
+Rapor, "mimari başına bir kademe" bulgusunu dolaylı kanıttan resmî kanıta
+taşımaktadır: ConvNeXt'in 353 operasyonunun **tamamı** ANE'ye atanmıştır
+(%100); Swin'in 631 operasyonundan **tek biri bile** ANE'ye atanmamış, yürütme
+138 CPU + 493 GPU operasyonuna bölünmüştür; VMamba için rapor üretilememektedir,
+çünkü rapor edilecek bir CoreML modeli yoktur. Kademelenmenin resmî hâli budur:
+**CNN → %100 ANE; Transformer → %0 ANE (GPU'da); SSM → rapor dahi üretilemiyor.**
+İki yan bulgu not edilmelidir. Birincisi, ANE reddi yalnızca yürütmeye değil
+yükleme katmanına da yansımaktadır: Swin'in model yüklemesi (5 596 ms)
+ConvNeXt'inkinin (142 ms) ~40 katıdır — dört katmanlı maliyet modelinin (b)
+katmanı, hesaplama birimi seçiminden bile etkilenmektedir. İkincisi, Xcode'un
+prediction medyanları (115.6 / 98.3 ms) harness'ın ALL hücreleriyle
+(91.4 / 86.0 ms) aynı mertebededir; ölçüm altyapıları farklı olduğundan bu,
+birebir karşılaştırma değil tutarlılık kontrolü olarak okunmalıdır.
 
 ### 4.3.5 Dağıtım Sürtünmesi SSM'den Önce Başlıyor
 
@@ -449,7 +620,7 @@ aşama kayıtlıdır):
    bu operatörde düşmüştür. Statik-dilimli numerik eşdeğer yazılarak çözülmüştür
    (orijinal başlığa karşı azami mutlak sapma ~2×10⁻⁵). Aynı operatör CoreML
    dönüştürücüsünü ve MPS eager arka ucunu da düşürmüştür: **tek bir operatör,
-   üç platformda üç ayrı kırılma** — Tablo 4.6'daki "torch MPS (statik PSP)"
+   üç platformda üç ayrı kırılma** — Tablo 4.8'deki "torch MPS (statik PSP)"
    ibaresinin nedeni budur.
 2. **mmseg kalıbı — `size=x.shape[2:]`:** Segmentasyon ekosisteminin her yerinde
    bulunan bu dinamik yeniden-boyutlandırma deseni, CoreML dönüştürücüsünü
@@ -465,7 +636,7 @@ Bunlara VMamba'nın kendi katmanı eklenmelidir: resmî VMamba deposu, NVIDIA's�
 bir makinede **import dahi edilememektedir**. "PyTorch fallback mevcut" iddiası
 pratikte iki CUDA varsayımına takılmaktadır — guard'sız `@triton.jit`
 dekoratörleri (triton'un macOS wheel'i yoktur) ve fallback seçilmiş olsa bile
-koşulsuz açılan `torch.cuda.device()` bağlamı. Tablo 4.5'teki eager ✅ işareti
+koşulsuz açılan `torch.cuda.device()` bağlamı. Tablo 4.7'deki eager ✅ işareti
 dahi iki kaynak yamasının ürünüdür ("fallback var" ile "fallback çalışıyor"
 arasındaki fark, ölçülebilir bir dağıtım engelidir).
 
@@ -481,31 +652,39 @@ uygulayıcılar için sonuçları Bölüm 5'te tartışılmaktadır.
 
 ### 4.3.6 Ara Özet: AS2'nin Katmanlı Cevabı
 
-Eldeki verilerle AS2'nin cevabı şu şekilde katmanlanmaktadır. Teorik FLOPs
+Tamamlanmış matrisle AS2'nin cevabı şu şekilde katmanlanmaktadır. Teorik FLOPs
 avantajı ile gerçekleşen verimlilik arasındaki fark, dağıtım yığını merdiveninde
 basamak basamak büyümektedir: eager CPU'da 3.6–3.8× olan gecikme farkı (Tablo
 4.2), her omurganın kendi dağıtılabilir-en-iyi hücresi karşılaştırıldığında 16×'e
-(Tablo 4.6), enerji ekseninde ise ~25×'e (Tablo 4.4/4.10) açılmaktadır. Bu
-büyümenin mekanizması, çıkarım aritmetiğinin yavaşlaması değildir — ONNX yolunda
-çıkarım farkı yalnızca 1.3×'tir ve mikrobenchmark, dönüşümü başarabilen SSM'in
-çıkarımda 15–22× kazanabildiğini göstermektedir. Mekanizma, ardışık taramanın
+(Tablo 4.8), enerji ekseninde ise ~25×'e (Tablo 4.4/4.14) açılmakta; çözünürlük
+ekseninde makas kapanmamakta (Tablo 4.6) ve teorik avantaj bölgesi olan 1024²'de
+dışa aktarma bellek duvarına çarpmaktadır (Tablo 4.11). Bu büyümenin mekanizması,
+çıkarım aritmetiğinin yavaşlaması değildir — tam tersidir: ORT yolunda VMamba'nın
+çıkarım medyanı eager'ının 0.30×'udur ve klasiklerin ORT hücrelerinden bile
+hızlıdır (ORT paradoksu, §4.3.1); mikrobenchmark da dönüşümü başarabilen SSM'in
+çıkarımda 15–22× kazanabildiğini göstermiştir. Naif okuyucunun "SSM uçta yavaş
+çalışır" beklentisinin aksine, çıkarım katmanı (d) SSM için avantajlı
+çıkmaktadır; imkânsızlaştıran, çıkarım-öncesi katmanlardır: ardışık taramanın
 graf temsiline L ile lineer büyüyen yapı olarak girmesi (tam unroll, 390 758
-düğüm, Gather ×139 798) ve bunun bedelinin çıkarım-öncesi katmanlarda —
-dönüşümde (448×), pakette (614 MB saf graf yapısı), yüklemede (~7 249×) ve
-CoreML örneğinde düpedüz dönüşüm başarısızlığında — ödenmesidir. Klasik
-omurgaların da sürtünmesiz olmadığı (üç platformda üç cerrahi, §4.3.5), ancak
-sürtünmenin yalnızca SSM'de imkânsızlığa dönüştüğü not edilmelidir. Eksik
-hücreler (VMamba ORT medyanı, `torch.compile`, ORT CoreML EP, çözünürlük
-taraması, TASK-022 çalışma-zamanı profili, TASK-023 Xcode raporu) bu resmi
-nicel olarak inceltebilir; ancak matris durumunun kendisi (Tablo 4.5) ve dört
-katmanlı maliyet asimetrisi (Tablo 4.7) bugünkü haliyle dahi tezin ana iddiasının
-— avantajın özel çekirdeklere bağımlı olduğu ve genel amaçlı yığınlarda büyük
-ölçüde kaybolduğu — ampirik çekirdeğini oluşturmaktadır. Yorum ve genelleme
-Bölüm 5'e bırakılmıştır.
+düğüm, Gather ×139 798) ve bedelin dönüşümde (448×; 1024²'de bellek duvarıyla
+düpedüz başarısızlık), pakette (614 MB saf graf yapısı), yüklemede (620–725 s,
+her süreç başlatımında yeniden) ve CoreML örneğinde dönüşümün kendisinde
+ödenmesi. Bu, "maliyet buharlaşmıyor, yanlış katmana taşınıyor" tezini
+güçlendirir: FLOPs analizinin tek gördüğü katman kazanca dönüşürken, FLOPs'un
+kör olduğu katmanlar dağıtımı imkânsızlaştırmaktadır. `torch.compile`'ın
+VMamba'da süreç çökmesi, derleme katmanı kırılganlığının üçüncü bağımsız
+zincirdeki tekrarıdır; ORT CoreML EP'nin bölümleme parçalanması (Swin'de 94
+parça, saf CoreML'in ~5× yavaşı) kısmî hızlandırıcı erişiminin sınırını
+çizmektedir. Klasik omurgaların da sürtünmesiz olmadığı (üç platformda üç
+cerrahi, §4.3.5), ancak sürtünmenin yalnızca SSM'de imkânsızlığa dönüştüğü not
+edilmelidir. Matris durumu (Tablo 4.7), dört katmanlı maliyet asimetrisi (Tablo
+4.9) ve resmî ANE kademelenmesi (Tablo 4.15) birlikte, tezin ana iddiasının —
+avantajın özel çekirdeklere ve araç zinciri desteğine bağımlı olduğu, genel
+amaçlı yığınlarda maliyetin yok olmayıp yanlış katmana taşındığı — ampirik
+çekirdeğini oluşturmaktadır. Yorum ve genelleme Bölüm 5'e bırakılmıştır.
 
 ---
 
-*Sayfa hedefi: ~10–12. Eksik hücreler (çözünürlük taraması, VMamba ORT medyanı,
-torch.compile, ORT CoreML EP, TASK-022 profilleme, TASK-023 Xcode raporu)
-tamamlandıkça tablolar güncellenecek; Şekil 4.1–4.2 veriler kapandığında
-üretilecektir.*
+*Sayfa hedefi: ~10–12. Deney matrisi kapanmıştır (TASK-020/021/022/023);
+v1'deki dokuz [ölçüm sürüyor] işareti bu sürümde final verilerle doldurulmuştur.
+Kalan iş: Şekil 4.1–4.2'nin Tablo 4.6 ve 4.8'deki verilerden üretilmesi.*
