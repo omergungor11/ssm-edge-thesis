@@ -1,0 +1,10 @@
+{
+  "timestamp": "2026-08-14T14:01:04.011542+00:00",
+  "tag": "swin_w8",
+  "backend": "coreml",
+  "path": "results/raw/swin_upernet_512_w8_linear.mlpackage",
+  "n": 250,
+  "protocol": "square-512 (export protokolü; en-boy korumalı DEĞİL)",
+  "mIoU": 36.05,
+  "aAcc": 81.6
+}

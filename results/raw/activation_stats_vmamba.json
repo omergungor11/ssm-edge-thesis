@@ -1,0 +1,205 @@
+{
+  "timestamp": "2026-08-14T13:54:40.221816+00:00",
+  "model": "vmamba",
+  "n_img": 12,
+  "layers": [
+    "layers.0.blocks.0.op.in_proj",
+    "layers.0.blocks.1.op.in_proj",
+    "layers.1.blocks.0.op.in_proj",
+    "layers.1.blocks.1.op.in_proj",
+    "layers.2.blocks.0.op.in_proj",
+    "layers.2.blocks.1.op.in_proj",
+    "layers.2.blocks.2.op.in_proj",
+    "layers.2.blocks.3.op.in_proj",
+    "layers.2.blocks.4.op.in_proj",
+    "layers.3.blocks.0.op.in_proj"
+  ],
+  "stats": {
+    "256": {
+      "layers.0.blocks.0.op.in_proj": {
+        "tensor_max": 29.028,
+        "p999": 22.867,
+        "kurtosis": 12.483,
+        "chmax_over_median": 2.717
+      },
+      "layers.0.blocks.1.op.in_proj": {
+        "tensor_max": 16.921,
+        "p999": 12.411,
+        "kurtosis": 7.883,
+        "chmax_over_median": 2.175
+      },
+      "layers.1.blocks.0.op.in_proj": {
+        "tensor_max": 21.926,
+        "p999": 15.542,
+        "kurtosis": 7.183,
+        "chmax_over_median": 2.492
+      },
+      "layers.1.blocks.1.op.in_proj": {
+        "tensor_max": 20.366,
+        "p999": 15.432,
+        "kurtosis": 10.533,
+        "chmax_over_median": 2.617
+      },
+      "layers.2.blocks.0.op.in_proj": {
+        "tensor_max": 34.198,
+        "p999": 24.787,
+        "kurtosis": 14.983,
+        "chmax_over_median": 3.817
+      },
+      "layers.2.blocks.1.op.in_proj": {
+        "tensor_max": 19.561,
+        "p999": 13.839,
+        "kurtosis": 5.967,
+        "chmax_over_median": 2.617
+      },
+      "layers.2.blocks.2.op.in_proj": {
+        "tensor_max": 23.718,
+        "p999": 17.832,
+        "kurtosis": 10.975,
+        "chmax_over_median": 3.017
+      },
+      "layers.2.blocks.3.op.in_proj": {
+        "tensor_max": 15.712,
+        "p999": 9.957,
+        "kurtosis": 6.05,
+        "chmax_over_median": 2.675
+      },
+      "layers.2.blocks.4.op.in_proj": {
+        "tensor_max": 18.136,
+        "p999": 12.035,
+        "kurtosis": 7.65,
+        "chmax_over_median": 3.008
+      },
+      "layers.3.blocks.0.op.in_proj": {
+        "tensor_max": 26.952,
+        "p999": 19.199,
+        "kurtosis": 3.975,
+        "chmax_over_median": 3.175
+      }
+    },
+    "512": {
+      "layers.0.blocks.0.op.in_proj": {
+        "tensor_max": 29.363,
+        "p999": 22.709,
+        "kurtosis": 12.758,
+        "chmax_over_median": 2.6
+      },
+      "layers.0.blocks.1.op.in_proj": {
+        "tensor_max": 16.814,
+        "p999": 12.449,
+        "kurtosis": 8.258,
+        "chmax_over_median": 2.058
+      },
+      "layers.1.blocks.0.op.in_proj": {
+        "tensor_max": 23.045,
+        "p999": 15.312,
+        "kurtosis": 7.358,
+        "chmax_over_median": 2.45
+      },
+      "layers.1.blocks.1.op.in_proj": {
+        "tensor_max": 20.936,
+        "p999": 15.565,
+        "kurtosis": 11.142,
+        "chmax_over_median": 2.467
+      },
+      "layers.2.blocks.0.op.in_proj": {
+        "tensor_max": 34.645,
+        "p999": 24.884,
+        "kurtosis": 14.658,
+        "chmax_over_median": 3.417
+      },
+      "layers.2.blocks.1.op.in_proj": {
+        "tensor_max": 21.827,
+        "p999": 14.445,
+        "kurtosis": 6.367,
+        "chmax_over_median": 2.55
+      },
+      "layers.2.blocks.2.op.in_proj": {
+        "tensor_max": 25.807,
+        "p999": 18.264,
+        "kurtosis": 11.725,
+        "chmax_over_median": 2.875
+      },
+      "layers.2.blocks.3.op.in_proj": {
+        "tensor_max": 16.87,
+        "p999": 10.542,
+        "kurtosis": 6.6,
+        "chmax_over_median": 2.558
+      },
+      "layers.2.blocks.4.op.in_proj": {
+        "tensor_max": 19.688,
+        "p999": 12.518,
+        "kurtosis": 8.35,
+        "chmax_over_median": 2.933
+      },
+      "layers.3.blocks.0.op.in_proj": {
+        "tensor_max": 28.652,
+        "p999": 19.718,
+        "kurtosis": 4.033,
+        "chmax_over_median": 2.992
+      }
+    },
+    "768": {
+      "layers.0.blocks.0.op.in_proj": {
+        "tensor_max": 29.607,
+        "p999": 22.585,
+        "kurtosis": 12.942,
+        "chmax_over_median": 2.717
+      },
+      "layers.0.blocks.1.op.in_proj": {
+        "tensor_max": 17.336,
+        "p999": 12.553,
+        "kurtosis": 8.658,
+        "chmax_over_median": 2.083
+      },
+      "layers.1.blocks.0.op.in_proj": {
+        "tensor_max": 22.899,
+        "p999": 15.257,
+        "kurtosis": 7.558,
+        "chmax_over_median": 2.408
+      },
+      "layers.1.blocks.1.op.in_proj": {
+        "tensor_max": 21.474,
+        "p999": 15.954,
+        "kurtosis": 11.7,
+        "chmax_over_median": 2.425
+      },
+      "layers.2.blocks.0.op.in_proj": {
+        "tensor_max": 34.857,
+        "p999": 24.608,
+        "kurtosis": 14.017,
+        "chmax_over_median": 3.208
+      },
+      "layers.2.blocks.1.op.in_proj": {
+        "tensor_max": 22.787,
+        "p999": 14.887,
+        "kurtosis": 6.5,
+        "chmax_over_median": 2.5
+      },
+      "layers.2.blocks.2.op.in_proj": {
+        "tensor_max": 27.44,
+        "p999": 18.775,
+        "kurtosis": 12.342,
+        "chmax_over_median": 2.892
+      },
+      "layers.2.blocks.3.op.in_proj": {
+        "tensor_max": 17.534,
+        "p999": 10.868,
+        "kurtosis": 7.058,
+        "chmax_over_median": 2.508
+      },
+      "layers.2.blocks.4.op.in_proj": {
+        "tensor_max": 20.882,
+        "p999": 13.115,
+        "kurtosis": 8.908,
+        "chmax_over_median": 2.967
+      },
+      "layers.3.blocks.0.op.in_proj": {
+        "tensor_max": 28.669,
+        "p999": 20.113,
+        "kurtosis": 4.042,
+        "chmax_over_median": 2.858
+      }
+    }
+  }
+}

@@ -1,0 +1,205 @@
+{
+  "timestamp": "2026-08-14T13:53:24.296588+00:00",
+  "model": "convnext",
+  "n_img": 12,
+  "layers": [
+    "stages.0.0.depthwise_conv",
+    "stages.0.1.pointwise_conv2",
+    "stages.1.0.depthwise_conv",
+    "stages.1.1.pointwise_conv2",
+    "stages.2.0.depthwise_conv",
+    "stages.2.1.pointwise_conv2",
+    "stages.2.3.depthwise_conv",
+    "stages.2.4.pointwise_conv2",
+    "stages.2.6.depthwise_conv",
+    "stages.2.7.pointwise_conv2"
+  ],
+  "stats": {
+    "256": {
+      "stages.0.0.depthwise_conv": {
+        "tensor_max": 1.374,
+        "p999": 0.581,
+        "kurtosis": 43.058,
+        "chmax_over_median": 3.975
+      },
+      "stages.0.1.pointwise_conv2": {
+        "tensor_max": 5.045,
+        "p999": 1.78,
+        "kurtosis": 34.425,
+        "chmax_over_median": 1.108
+      },
+      "stages.1.0.depthwise_conv": {
+        "tensor_max": 4.93,
+        "p999": 3.853,
+        "kurtosis": 6.883,
+        "chmax_over_median": 2.392
+      },
+      "stages.1.1.pointwise_conv2": {
+        "tensor_max": 5.793,
+        "p999": 3.551,
+        "kurtosis": 30.667,
+        "chmax_over_median": 1.542
+      },
+      "stages.2.0.depthwise_conv": {
+        "tensor_max": 3.884,
+        "p999": 2.985,
+        "kurtosis": 8.333,
+        "chmax_over_median": 2.767
+      },
+      "stages.2.1.pointwise_conv2": {
+        "tensor_max": 7.542,
+        "p999": 5.026,
+        "kurtosis": 16.2,
+        "chmax_over_median": 1.217
+      },
+      "stages.2.3.depthwise_conv": {
+        "tensor_max": 7.909,
+        "p999": 3.663,
+        "kurtosis": 15.417,
+        "chmax_over_median": 4.458
+      },
+      "stages.2.4.pointwise_conv2": {
+        "tensor_max": 11.942,
+        "p999": 8.009,
+        "kurtosis": 63.042,
+        "chmax_over_median": 1.267
+      },
+      "stages.2.6.depthwise_conv": {
+        "tensor_max": 14.705,
+        "p999": 10.977,
+        "kurtosis": 20.05,
+        "chmax_over_median": 4.517
+      },
+      "stages.2.7.pointwise_conv2": {
+        "tensor_max": 6.603,
+        "p999": 3.221,
+        "kurtosis": 14.167,
+        "chmax_over_median": 1.558
+      }
+    },
+    "512": {
+      "stages.0.0.depthwise_conv": {
+        "tensor_max": 1.349,
+        "p999": 0.522,
+        "kurtosis": 55.958,
+        "chmax_over_median": 3.858
+      },
+      "stages.0.1.pointwise_conv2": {
+        "tensor_max": 5.071,
+        "p999": 1.746,
+        "kurtosis": 37.842,
+        "chmax_over_median": 1.1
+      },
+      "stages.1.0.depthwise_conv": {
+        "tensor_max": 5.381,
+        "p999": 3.793,
+        "kurtosis": 7.292,
+        "chmax_over_median": 2.35
+      },
+      "stages.1.1.pointwise_conv2": {
+        "tensor_max": 7.396,
+        "p999": 4.237,
+        "kurtosis": 47.292,
+        "chmax_over_median": 1.55
+      },
+      "stages.2.0.depthwise_conv": {
+        "tensor_max": 3.873,
+        "p999": 2.883,
+        "kurtosis": 9.125,
+        "chmax_over_median": 2.542
+      },
+      "stages.2.1.pointwise_conv2": {
+        "tensor_max": 8.046,
+        "p999": 3.534,
+        "kurtosis": 17.033,
+        "chmax_over_median": 1.267
+      },
+      "stages.2.3.depthwise_conv": {
+        "tensor_max": 7.86,
+        "p999": 3.255,
+        "kurtosis": 12.95,
+        "chmax_over_median": 4.0
+      },
+      "stages.2.4.pointwise_conv2": {
+        "tensor_max": 12.979,
+        "p999": 3.281,
+        "kurtosis": 70.975,
+        "chmax_over_median": 1.292
+      },
+      "stages.2.6.depthwise_conv": {
+        "tensor_max": 14.3,
+        "p999": 9.896,
+        "kurtosis": 13.617,
+        "chmax_over_median": 3.475
+      },
+      "stages.2.7.pointwise_conv2": {
+        "tensor_max": 8.225,
+        "p999": 2.542,
+        "kurtosis": 30.033,
+        "chmax_over_median": 1.492
+      }
+    },
+    "768": {
+      "stages.0.0.depthwise_conv": {
+        "tensor_max": 1.276,
+        "p999": 0.419,
+        "kurtosis": 64.275,
+        "chmax_over_median": 4.567
+      },
+      "stages.0.1.pointwise_conv2": {
+        "tensor_max": 5.076,
+        "p999": 4.261,
+        "kurtosis": 40.017,
+        "chmax_over_median": 1.092
+      },
+      "stages.1.0.depthwise_conv": {
+        "tensor_max": 5.457,
+        "p999": 3.676,
+        "kurtosis": 7.5,
+        "chmax_over_median": 2.383
+      },
+      "stages.1.1.pointwise_conv2": {
+        "tensor_max": 8.187,
+        "p999": 4.68,
+        "kurtosis": 53.717,
+        "chmax_over_median": 1.467
+      },
+      "stages.2.0.depthwise_conv": {
+        "tensor_max": 3.879,
+        "p999": 2.857,
+        "kurtosis": 10.133,
+        "chmax_over_median": 2.542
+      },
+      "stages.2.1.pointwise_conv2": {
+        "tensor_max": 8.129,
+        "p999": 3.069,
+        "kurtosis": 17.658,
+        "chmax_over_median": 1.267
+      },
+      "stages.2.3.depthwise_conv": {
+        "tensor_max": 7.688,
+        "p999": 3.03,
+        "kurtosis": 11.708,
+        "chmax_over_median": 3.792
+      },
+      "stages.2.4.pointwise_conv2": {
+        "tensor_max": 13.305,
+        "p999": 2.895,
+        "kurtosis": 75.033,
+        "chmax_over_median": 1.325
+      },
+      "stages.2.6.depthwise_conv": {
+        "tensor_max": 14.24,
+        "p999": 9.159,
+        "kurtosis": 11.842,
+        "chmax_over_median": 3.158
+      },
+      "stages.2.7.pointwise_conv2": {
+        "tensor_max": 8.851,
+        "p999": 2.293,
+        "kurtosis": 36.683,
+        "chmax_over_median": 1.533
+      }
+    }
+  }
+}

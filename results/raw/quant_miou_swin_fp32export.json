@@ -1,0 +1,10 @@
+{
+  "timestamp": "2026-08-14T13:59:16.400251+00:00",
+  "tag": "swin_fp32export",
+  "backend": "coreml",
+  "path": "results/raw/swin_upernet_512.mlpackage",
+  "n": 250,
+  "protocol": "square-512 (export protokolü; en-boy korumalı DEĞİL)",
+  "mIoU": 36.01,
+  "aAcc": 81.59
+}

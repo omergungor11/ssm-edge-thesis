@@ -1,0 +1,205 @@
+{
+  "timestamp": "2026-08-14T13:54:04.043136+00:00",
+  "model": "swin",
+  "n_img": 12,
+  "layers": [
+    "patch_embed.projection",
+    "stages.0.blocks.0.attn.w_msa.proj",
+    "stages.0.blocks.1.attn.w_msa.proj",
+    "stages.1.blocks.0.attn.w_msa.qkv",
+    "stages.1.blocks.1.attn.w_msa.qkv",
+    "stages.1.downsample.reduction",
+    "stages.2.blocks.0.attn.w_msa.proj",
+    "stages.2.blocks.1.attn.w_msa.proj",
+    "stages.2.blocks.2.attn.w_msa.proj",
+    "stages.2.blocks.3.attn.w_msa.proj"
+  ],
+  "stats": {
+    "256": {
+      "patch_embed.projection": {
+        "tensor_max": 2.498,
+        "p999": 1.669,
+        "kurtosis": 13.592,
+        "chmax_over_median": 2.817
+      },
+      "stages.0.blocks.0.attn.w_msa.proj": {
+        "tensor_max": 2.327,
+        "p999": 1.984,
+        "kurtosis": 9.35,
+        "chmax_over_median": 2.492
+      },
+      "stages.0.blocks.1.attn.w_msa.proj": {
+        "tensor_max": 1.693,
+        "p999": 1.205,
+        "kurtosis": 6.033,
+        "chmax_over_median": 1.983
+      },
+      "stages.1.blocks.0.attn.w_msa.qkv": {
+        "tensor_max": 4.648,
+        "p999": 2.711,
+        "kurtosis": 5.317,
+        "chmax_over_median": 2.317
+      },
+      "stages.1.blocks.1.attn.w_msa.qkv": {
+        "tensor_max": 5.456,
+        "p999": 3.596,
+        "kurtosis": 5.442,
+        "chmax_over_median": 2.117
+      },
+      "stages.1.downsample.reduction": {
+        "tensor_max": 4.55,
+        "p999": 3.09,
+        "kurtosis": 13.8,
+        "chmax_over_median": 3.65
+      },
+      "stages.2.blocks.0.attn.w_msa.proj": {
+        "tensor_max": 2.83,
+        "p999": 2.005,
+        "kurtosis": 24.592,
+        "chmax_over_median": 4.042
+      },
+      "stages.2.blocks.1.attn.w_msa.proj": {
+        "tensor_max": 2.158,
+        "p999": 1.155,
+        "kurtosis": 8.017,
+        "chmax_over_median": 2.833
+      },
+      "stages.2.blocks.2.attn.w_msa.proj": {
+        "tensor_max": 3.295,
+        "p999": 2.159,
+        "kurtosis": 21.417,
+        "chmax_over_median": 3.767
+      },
+      "stages.2.blocks.3.attn.w_msa.proj": {
+        "tensor_max": 4.319,
+        "p999": 2.843,
+        "kurtosis": 32.608,
+        "chmax_over_median": 4.642
+      }
+    },
+    "512": {
+      "patch_embed.projection": {
+        "tensor_max": 2.647,
+        "p999": 1.67,
+        "kurtosis": 14.842,
+        "chmax_over_median": 2.883
+      },
+      "stages.0.blocks.0.attn.w_msa.proj": {
+        "tensor_max": 2.387,
+        "p999": 2.063,
+        "kurtosis": 9.067,
+        "chmax_over_median": 2.392
+      },
+      "stages.0.blocks.1.attn.w_msa.proj": {
+        "tensor_max": 1.74,
+        "p999": 1.207,
+        "kurtosis": 6.358,
+        "chmax_over_median": 1.908
+      },
+      "stages.1.blocks.0.attn.w_msa.qkv": {
+        "tensor_max": 4.578,
+        "p999": 2.623,
+        "kurtosis": 5.1,
+        "chmax_over_median": 2.133
+      },
+      "stages.1.blocks.1.attn.w_msa.qkv": {
+        "tensor_max": 5.593,
+        "p999": 3.491,
+        "kurtosis": 5.542,
+        "chmax_over_median": 2.017
+      },
+      "stages.1.downsample.reduction": {
+        "tensor_max": 4.616,
+        "p999": 3.131,
+        "kurtosis": 16.3,
+        "chmax_over_median": 3.417
+      },
+      "stages.2.blocks.0.attn.w_msa.proj": {
+        "tensor_max": 2.945,
+        "p999": 1.968,
+        "kurtosis": 17.992,
+        "chmax_over_median": 3.608
+      },
+      "stages.2.blocks.1.attn.w_msa.proj": {
+        "tensor_max": 2.3,
+        "p999": 1.161,
+        "kurtosis": 5.817,
+        "chmax_over_median": 2.6
+      },
+      "stages.2.blocks.2.attn.w_msa.proj": {
+        "tensor_max": 3.441,
+        "p999": 1.928,
+        "kurtosis": 12.525,
+        "chmax_over_median": 3.292
+      },
+      "stages.2.blocks.3.attn.w_msa.proj": {
+        "tensor_max": 4.585,
+        "p999": 2.161,
+        "kurtosis": 17.492,
+        "chmax_over_median": 4.067
+      }
+    },
+    "768": {
+      "patch_embed.projection": {
+        "tensor_max": 2.457,
+        "p999": 1.648,
+        "kurtosis": 15.45,
+        "chmax_over_median": 3.092
+      },
+      "stages.0.blocks.0.attn.w_msa.proj": {
+        "tensor_max": 2.406,
+        "p999": 2.108,
+        "kurtosis": 8.692,
+        "chmax_over_median": 2.417
+      },
+      "stages.0.blocks.1.attn.w_msa.proj": {
+        "tensor_max": 1.757,
+        "p999": 1.159,
+        "kurtosis": 6.492,
+        "chmax_over_median": 1.883
+      },
+      "stages.1.blocks.0.attn.w_msa.qkv": {
+        "tensor_max": 4.643,
+        "p999": 2.561,
+        "kurtosis": 4.658,
+        "chmax_over_median": 2.108
+      },
+      "stages.1.blocks.1.attn.w_msa.qkv": {
+        "tensor_max": 5.559,
+        "p999": 3.499,
+        "kurtosis": 5.325,
+        "chmax_over_median": 1.975
+      },
+      "stages.1.downsample.reduction": {
+        "tensor_max": 4.856,
+        "p999": 3.119,
+        "kurtosis": 18.825,
+        "chmax_over_median": 3.583
+      },
+      "stages.2.blocks.0.attn.w_msa.proj": {
+        "tensor_max": 2.987,
+        "p999": 1.961,
+        "kurtosis": 16.05,
+        "chmax_over_median": 3.417
+      },
+      "stages.2.blocks.1.attn.w_msa.proj": {
+        "tensor_max": 2.434,
+        "p999": 1.173,
+        "kurtosis": 5.133,
+        "chmax_over_median": 2.542
+      },
+      "stages.2.blocks.2.attn.w_msa.proj": {
+        "tensor_max": 3.483,
+        "p999": 1.791,
+        "kurtosis": 9.717,
+        "chmax_over_median": 3.033
+      },
+      "stages.2.blocks.3.attn.w_msa.proj": {
+        "tensor_max": 4.887,
+        "p999": 2.016,
+        "kurtosis": 13.5,
+        "chmax_over_median": 3.95
+      }
+    }
+  }
+}

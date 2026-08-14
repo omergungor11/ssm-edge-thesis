@@ -1,0 +1,10 @@
+{
+  "timestamp": "2026-08-14T14:01:59.024817+00:00",
+  "tag": "convnext_w4",
+  "backend": "coreml",
+  "path": "results/raw/convnext_upernet_512_w4_palette.mlpackage",
+  "n": 250,
+  "protocol": "square-512 (export protokolü; en-boy korumalı DEĞİL)",
+  "mIoU": 31.08,
+  "aAcc": 79.64
+}

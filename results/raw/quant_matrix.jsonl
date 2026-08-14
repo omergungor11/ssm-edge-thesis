@@ -10,3 +10,5 @@
 {"timestamp": "2026-08-14T13:34:59.296398+00:00", "model": "swin", "backend": "ort", "mode": "dynamic_int8", "diff_vs_fp32": {"max_abs": 2.3929, "mean_abs": 0.40143, "argmax_match_pct": 94.86}}
 {"timestamp": "2026-08-14T13:37:27.929811+00:00", "model": "vmamba", "backend": "ort", "mode": "dynamic_int8", "ok": true, "quantize_s": 34.4, "size_mb": 715.3}
 {"timestamp": "2026-08-14T13:48:59.375331+00:00", "model": "vmamba", "backend": "ort", "mode": "dynamic_int8", "stage": "load", "load_s": 691.392}
+{"timestamp": "2026-08-14T13:51:54.380234+00:00", "model": "convnext", "backend": "coreml", "mode": "w4_palette", "ok": true, "quantize_s": 28.3, "size_mb": 30.0, "diff_vs_fp32": {"max_abs": 8.6016, "mean_abs": 1.7608, "argmax_match_pct": 41.6}}
+{"timestamp": "2026-08-14T13:52:21.955512+00:00", "model": "swin", "backend": "coreml", "mode": "w4_palette", "ok": true, "quantize_s": 14.3, "size_mb": 32.3, "diff_vs_fp32": {"max_abs": 9.2031, "mean_abs": 1.89084, "argmax_match_pct": 86.25}}
