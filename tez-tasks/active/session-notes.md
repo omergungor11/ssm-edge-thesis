@@ -1,5 +1,28 @@
 # Session Notes
 
+## 2026-08-13 — Session 4 (maraton: Faz 2 kapanış + Faz 3 komple)
+
+### Completed
+- [x] TASK-021/022: Ölçüm matrisi + profiller — ORT paradoksu (VMamba ORT 618ms=eager 0.30x; yük yüklemede: 725s), 1024² ONNX bellek duvarı (~65GB, kullanıcı durdurdu), compile fiyaskosu (ConvNeXt 2.9x yavaş, VMamba süreç çöker), CoreML EP 94-parça bölünme
+- [x] TASK-023: Xcode ANE kanıtı — ConvNeXt 353/353 ANE, Swin 0/631; ekran görüntüleri `results/raw/xcode/`
+- [x] TASK-024: Bölüm 4.2-4.3 v2 (5.6K kelime, Tablo 4.5-4.15) — Faz 2 TAMAM
+- [x] TASK-025..028: Nicemleme — W8 bedava (mIoU ±0, ANE %29 hızlanma), W4 asimetrik (-3.9/-2.8), ORT INT8 6-17x pesimizasyon, VMamba INT8 858→715MB (yapı nicemlenemiyor); TASK-027: VMamba aktivasyonları EN ILIMLI ve sabit (literatürün tersi!)
+- [x] TASK-029: Bölüm 4.4 (2.5K kelime) — Faz 3 TAMAM
+- [x] Bölüm 3 (Yöntem) taslak v1 (3.5K kelime, agent)
+- [x] 4 tez şekli (`results/figures/`), enerji matrisi (powermetrics, kullanıcıyla)
+
+### Next Session
+- [ ] Faz 4 tasarım kararı: TASK-030 scan yeniden formülasyonu (SSD/blok) — kapsam konuşulacak
+- [ ] Şekil 4.5-4.6 üretimi (nicemleme + aykırı değer grafikları) — make_figures'a ekle
+- [ ] Ara doğrulamalar: tam-val mIoU'lar (kare-512 fp32/W8), enerji turu tekrarı (temiz koşullarda)
+- [ ] Cityscapes hesabı hâlâ kullanıcıda (opsiyonel — 1024 bellek duvarı bulgusundan sonra önemi azaldı)
+
+### Kilit kararlar/dersler
+- Ölçüm sırasında Xcode/kullanıcı işi çakışması → duraklat-devam protokolü uygulandı; kirli kayıtlar (768) yeniden ölçüldü
+- zsh word-splitting tuzağı (set -- $cfg) mIoU zincirini sessiz düşürdü — bash döngülerinde dikkat
+- Rastgele-girdi argmax vekili gerçek mIoU hasarını abartıyor — vekil metrik dersi tezde
+
+
 ## 2026-08-11/12 — Session 3 (uzun oturum: revizyon + Faz 0 + Faz 1 açılışı)
 
 ### Completed
