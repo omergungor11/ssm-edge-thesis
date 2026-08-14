@@ -11,12 +11,12 @@
 | 0 | Öncül doğrulama + ölçüm altyapısı | 1-2 | 11 | 10 | 1 | 0 | 0 |
 | 1 | Model edinimi + doğruluk doğrulama *(revize)* | 3-4 | 7 | 7 | 0 | 0 | 0 |
 | 2 | Apple dağıtım yığını matrisi ← *kalp* | 5-7 | 5 | 5 | 0 | 0 | 0 |
-| 3 | Nicemlemenin yoğun tahmine transferi | 8-10 | 5 | 4 | 0 | 1 | 0 |
+| 3 | Nicemlemenin yoğun tahmine transferi | 8-10 | 5 | 5 | 0 | 0 | 0 |
 | 4 | ANE-dostu yeniden formülasyon ← *riskli* | 11-13 | 4 | 0 | 0 | 4 | 0 |
 | 5 | Yazım ve toparlama | 14-16 | 5 | 0 | 0 | 5 | 0 |
-| **Total** | | | **37** | **26** | **0** | **11** | **0** |
+| **Total** | | | **37** | **27** | **0** | **10** | **0** |
 
-**Progress**: 26/37 (%70) — Faz 3 ölçümleri TAMAM (kalan: TASK-029 Bölüm 4.4 yazımı) · **Öncül doğrulandı** (`tez-docs/oncul-dogrulama.md`) · *TASK-006: CoreML EP hücresi Faz 2'ye devredildi
+**Progress**: 27/37 (%73) — **FAZ 3 TAMAM** → Faz 4 (özgün katkı) ya da Faz 5 hazırlığı · **Öncül doğrulandı** (`tez-docs/oncul-dogrulama.md`) · *TASK-006: CoreML EP hücresi Faz 2'ye devredildi
 
 ### Kim sütunu
 
@@ -94,7 +94,7 @@
 | TASK-026 | Nicemleme mIoU etkisi | 🤝 | L | ✅ DONE — **W8 ±0, W4 −2.8/−3.9** (250-alt-küme) | TASK-025 |
 | TASK-027 | Aykırı değer × çözünürlük analizi | 🤝 | M | ✅ DONE — **VMamba en ılımlı, sabit; ConvNeXt 768'de kurtosis 64** | TASK-026 |
 | TASK-028 | Nicemlenmiş modellerin yığın ölçümü | 🤝 | M | ✅ DONE — W8 ANE %29 hızlanma; ORT INT8 6-17× pesimizasyon; VMamba 715MB/691s değişmedi | TASK-026 |
-| TASK-029 | Bölüm 4.4 (AS3) yazımı | 🤖 | M | PENDING | TASK-027, TASK-028 |
+| TASK-029 | Bölüm 4.4 (AS3) yazımı | 🤖 | M | ✅ DONE — 2.5K kelime, Tablo 4.16-4.19 | TASK-027, TASK-028 |
 
 ---
 
