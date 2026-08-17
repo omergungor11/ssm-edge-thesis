@@ -12,11 +12,11 @@
 | 1 | Model edinimi + doğruluk doğrulama *(revize)* | 3-4 | 7 | 7 | 0 | 0 | 0 |
 | 2 | Apple dağıtım yığını matrisi ← *kalp* | 5-7 | 5 | 5 | 0 | 0 | 0 |
 | 3 | Nicemlemenin yoğun tahmine transferi | 8-10 | 5 | 5 | 0 | 0 | 0 |
-| 4 | ANE-dostu yeniden formülasyon ← *riskli* | 11-13 | 4 | 0 | 0 | 4 | 0 |
+| 4 | ANE-dostu yeniden formülasyon ← *riskli* | 11-13 | 4 | 3 | 0 | 1 | 0 |
 | 5 | Yazım ve toparlama | 14-16 | 5 | 0 | 0 | 5 | 0 |
-| **Total** | | | **37** | **27** | **0** | **10** | **0** |
+| **Total** | | | **37** | **30** | **0** | **7** | **0** |
 
-**Progress**: 27/37 (%73) — **FAZ 3 TAMAM** → Faz 4 (özgün katkı) ya da Faz 5 hazırlığı · **Öncül doğrulandı** (`tez-docs/oncul-dogrulama.md`) · *TASK-006: CoreML EP hücresi Faz 2'ye devredildi
+**Progress**: 30/37 (%81) — Faz 4 prototip TAMAM (kalan: TASK-033 Bölüm 4.5) → Faz 5 · **Öncül doğrulandı** (`tez-docs/oncul-dogrulama.md`) · *TASK-006: CoreML EP hücresi Faz 2'ye devredildi
 
 ### Kim sütunu
 
@@ -104,9 +104,9 @@
 
 | ID | Task | Kim | Complexity | Status | Dependencies |
 |----|------|-----|-----------|--------|-------------|
-| TASK-030 | Scan yeniden formülasyonu — **PROTOTİP kapsamı** (kullanıcı kararı 14 Ağu): tek SS2D bloğu × 3 form (seq/blocked/ane) | 🤝 | L | 🔶 IN PROGRESS | TASK-022 |
-| TASK-031 | Apple ANE reçetesi: (B,C,1,S) düzeni, split/concat parçalama, reshape/transpose minimizasyonu | 🤝 | L | PENDING | TASK-030 |
-| TASK-032 | Kazanç ölçümü — graf boyutu, yükleme süresi, gecikme, doğruluk ödünleşimi | 🤝 | M | PENDING | TASK-031 |
+| TASK-030 | Scan yeniden formülasyonu (prototip) | 🤝 | L | ✅ DONE — çürüme-matrisi formu, seq bit-eşdeğer, blocked ~2e-6 | TASK-022 |
+| TASK-031 | ANE reçetesi uygulaması | 🤝 | L | ✅ DONE — transpose 4→2 ama kazanç yok (dürüst negatif) | TASK-030 |
+| TASK-032 | Kazanç ölçümü | 🤝 | M | ✅ DONE — düğüm 20×↓, CoreML kapısı açıldı; mekanizma bulgusu: engel op değil ÖLÇEK | TASK-031 |
 | TASK-033 | Bölüm 4.5 (AS4) yazımı. Kazanç yoksa "denenen yaklaşım ve neden yetersiz kaldığı" olarak yaz | 🤖 | M | PENDING | TASK-032 |
 
 ---
