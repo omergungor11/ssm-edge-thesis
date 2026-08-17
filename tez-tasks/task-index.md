@@ -13,10 +13,10 @@
 | 2 | Apple dağıtım yığını matrisi ← *kalp* | 5-7 | 5 | 5 | 0 | 0 | 0 |
 | 3 | Nicemlemenin yoğun tahmine transferi | 8-10 | 5 | 5 | 0 | 0 | 0 |
 | 4 | ANE-dostu yeniden formülasyon ← *riskli* | 11-13 | 4 | 4 | 0 | 0 | 0 |
-| 5 | Yazım ve toparlama | 14-16 | 5 | 2 | 0 | 3 | 0 |
-| **Total** | | | **37** | **33** | **0** | **4** | **0** |
+| 5 | Yazım ve toparlama | 14-16 | 5 | 3 | 0 | 2 | 0 |
+| **Total** | | | **37** | **34** | **0** | **3** | **0** |
 
-**Progress**: 33/37 (%89) — TEZ METNİ KOMPLE (Özet + Bölüm 1-6) · kalan: kaynakça/ekler, bütünsel okuma (🧑), repo cilası · **Öncül doğrulandı** (`tez-docs/oncul-dogrulama.md`) · *TASK-006: CoreML EP hücresi Faz 2'ye devredildi
+**Progress**: 34/37 (%92) — kalan: TASK-037 bütünsel okuma (🧑 Ömer!), TASK-038 repo cilası, TASK-007 kalıntısı · **Öncül doğrulandı** (`tez-docs/oncul-dogrulama.md`) · *TASK-006: CoreML EP hücresi Faz 2'ye devredildi
 
 ### Kim sütunu
 
@@ -117,7 +117,7 @@
 |----|------|-----|-----------|--------|-------------|
 | TASK-034 | Bölüm 5 (Tartışma) + Bölüm 6 (Sonuç) | 🤖 | L | ✅ DONE — 4.0K + 1.8K kelime | TASK-033 |
 | TASK-035 | Bölüm 1 (Giriş) + Özet/Abstract | 🤖 | M | ✅ DONE — 2.5K + Özet/Abstract | TASK-034 |
-| TASK-036 | Kaynakça düzeni (60-80 kaynak) + Ekler A-D | 🤖 | M | PENDING | TASK-034 |
+| TASK-036 | Kaynakça + Ekler A-D | 🤖 | M | ✅ DONE — 48/48 atıf çözüldü, 45 künye (uydurma yok), tutarlılık raporu | TASK-034 |
 | TASK-037 | Bütünsel okuma, tutarlılık kontrolü, şekil/tablo numaralandırma, dil düzeltmesi | 🤝 | L | PENDING | TASK-035, TASK-036 |
 | TASK-038 | Kod deposunu temizle ve yayınla (tekrarlanabilirlik paketi) | 🤖 | M | PENDING | TASK-037 |
 
