@@ -1,5 +1,28 @@
 # Session Notes
 
+## 2026-08-14 — Session 5 (Faz 4 + Faz 5 yazım maratonu)
+
+### Completed
+- [x] GitHub yayını: github.com/omergungor11/ssm-edge-thesis (public, MIT, kapsamlı README; >45MB model artefaktları git geçmişinden temizlendi — 207MiB→6.9MiB)
+- [x] TASK-030..032: Faz 4 prototipi — çürüme-matrisi blok formu (naif cumsum NaN bulgusuyla), düğüm 20×↓, CoreML kapısı açıldı; MEKANİZMA: engel op-uyumu değil GRAF ÖLÇEĞİ (tek-blok seq bile ANE'de 6.7ms/%99.9)
+- [x] TASK-033: Bölüm 4.5 — FAZ 4 TAMAM, AS1-AS4 hepsi cevaplı
+- [x] TASK-034: Bölüm 5 (4.0K — uygulayıcı tablosu, konjonktürel/yapısal ayrımı) + Bölüm 6 (1.8K)
+- [x] TASK-035: Bölüm 1 Giriş (2.5K) + Özet/Abstract — TEZ METNİ KOMPLE (~25K kelime)
+- [x] TASK-036: Kaynakça 45 künye (48/48 atıf çözüldü, uydurma yok) + EK A-D
+- [x] Şekil 4.5-4.7 → 7/7 şekil tamam
+- [x] Faz 4 kapsam kararı (kullanıcı): prototip-önce
+
+### Next Session
+- [ ] **TASK-037 (🧑 Ömer): bütünsel okuma** — önerilen sıra: Özet → Bölüm 1 → Bölüm 5, sonra 4'ler; notlar gelince ben işlerim
+- [ ] TASK-038: repo son cilası (README şekil önizlemeleri, smoke-test)
+- [ ] TASK-007 kalıntısını kapat (formalite)
+- [ ] Kaynakça tutarlılık raporundaki ayıklama (9 atıfsız tarama-kaynağı, 4 taramasız metin-kaynağı) + QMamba venue teyidi
+- [ ] Yer tutucu atıfları metne bağlama (kaynakca.md eşleme tablosu hazır)
+
+### Notlar
+- Agent alt-agent bekleme deseni İKİNCİ kez askı yarattı (kaynakça agent'ı) — SendMessage dürtmesiyle çözüldü; agent'lara "alt-agent'a devretme, senkron bitir" talimatı verilecek
+- Tez %92: kalan 3 iş, ikisi insanlı
+
 ## 2026-08-13 — Session 4 (maraton: Faz 2 kapanış + Faz 3 komple)
 
 ### Completed

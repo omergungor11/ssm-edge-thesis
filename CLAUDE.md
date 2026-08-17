@@ -23,9 +23,10 @@ kadarının gerçekleştiğinin ampirik analizi. 16 hafta, hedef bitiş ~30 Kas�
 
 ## Mevcut Durum
 
-**Progress**: 27/37 task (%73) — Faz 0-3 TAMAM (14 Ağu itibarıyla; plana göre ~9 hafta önde).
-**Sıradaki**: Faz 4 (TASK-030..033) — selective scan'in ANE-dostu yeniden formülasyonu
-(**riskli özgün katkı**; kapsam kararı kullanıcıyla konuşulacak) → Faz 5 yazım/toparlama.
+**Progress**: 34/37 task (%92) — Faz 0-4 TAMAM + tez metni komple (Özet+Bölüm 1-6+kaynakça+ekler).
+**GitHub**: github.com/omergungor11/ssm-edge-thesis (public, MIT).
+**Sıradaki**: TASK-037 bütünsel okuma (🧑 Ömer — kritik!), TASK-038 repo cilası.
+Faz 4 sonucu: blok-form CoreML kapısını açtı (düğüm 20×↓); kök teşhis: engel op-uyumu değil graf ölçeği.
 **Ana bulgular**: `tez-docs/export-matrisi.md` + `tez-docs/nicemleme-sonuclari.md` —
 "SSM'in uç engeli sayısal değil yapısal" (CoreML ∅, 1024² bellek duvarı, ORT paradoksu,
 ANE: CNN %100 / ViT %0 / SSM ∅; W8 bedava).
