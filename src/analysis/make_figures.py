@@ -279,6 +279,220 @@ def fig_energy() -> None:
     print(f"  fig-4.4: {len(vals)} çubuk (ANE aktif: {sum(1 for h in hatches if h)})")
 
 
+# fp32 CoreML paket boyutları (MB) — export_matrix'ten doğrulanmış sabitler
+QUANT_FP32_SIZE = {"convnext": 118.8, "swin": 127.5}
+
+# ORT dynamic INT8 medyan gecikmeleri (ms) — nicemleme-sonuclari.md, 512²
+ORT_INT8_LATENCY = {
+    "convnext": (10863.0, 644.0),  # (int8_ms, fp32_ms)
+    "swin": (7094.0, 714.0),
+    "vmamba": (3752.0, 618.0),
+}
+
+
+def fig_quant() -> None:
+    """(a) boyut vs mIoU (CoreML fp32/W8/W4), (b) ORT INT8 gecikme çarpanı."""
+    quant_path = RAW / "quant_matrix.jsonl"
+    if not quant_path.exists():
+        print("UYARI: quant_matrix.jsonl yok — fig-4.5 atlandı")
+        return
+    size: dict[tuple[str, str], float] = {}
+    for line in quant_path.read_text().splitlines():
+        if not line.strip():
+            continue
+        rec = json.loads(line)
+        if rec.get("backend") == "coreml" and rec.get("ok") and rec.get("size_mb"):
+            size[(rec["model"], rec["mode"])] = float(rec["size_mb"])
+
+    def miou(model: str, tag: str) -> float | None:
+        path = RAW / f"quant_miou_{model}_{tag}.json"
+        if not path.exists():
+            print(f"  fig-4.5 eksik: {path.name}")
+            return None
+        return float(json.loads(path.read_text())["mIoU"])
+
+    fig, (ax_a, ax_b) = plt.subplots(1, 2, figsize=(10, 4.2))
+    n_pts = 0
+    variants = [
+        ("fp32", "fp32export", lambda m: QUANT_FP32_SIZE.get(m)),
+        ("W8", "w8", lambda m: size.get((m, "w8_linear"))),
+        ("W4", "w4", lambda m: size.get((m, "w4_palette"))),
+    ]
+    for model in ("convnext", "swin"):
+        xs, ys, lbls = [], [], []
+        for lbl, tag, size_fn in variants:
+            s, mi = size_fn(model), miou(model, tag)
+            if s is None or mi is None:
+                print(f"  fig-4.5 eksik: {model}/{lbl}")
+                continue
+            xs.append(s)
+            ys.append(mi)
+            lbls.append(lbl)
+        ax_a.plot(xs, ys, "-o", color=MODEL_COLOR[model], markersize=7,
+                  linewidth=1.6, label=MODEL_LABEL[model])
+        for x_, y_, lbl in zip(xs, ys, lbls):
+            ax_a.annotate(lbl, (x_, y_), textcoords="offset points",
+                          xytext=(0, 8), ha="center", fontsize=8,
+                          color=MODEL_COLOR[model])
+        n_pts += len(xs)
+    ax_a.set_xlabel("Paket boyutu (MB)")
+    ax_a.set_ylabel("mIoU (ADE20K val, square-512, %)")
+    ax_a.set_title("(a) Nicemleme: boyut ↔ doğruluk (CoreML)", fontsize=10)
+    ax_a.legend(framealpha=0.9)
+
+    models_b = [m for m in ("convnext", "swin", "vmamba") if m in ORT_INT8_LATENCY]
+    factors = [ORT_INT8_LATENCY[m][0] / ORT_INT8_LATENCY[m][1] for m in models_b]
+    bars = ax_b.bar(range(len(models_b)), factors,
+                    color=[MODEL_COLOR[m] for m in models_b],
+                    edgecolor="black", linewidth=0.6)
+    for b, f in zip(bars, factors):
+        ax_b.annotate(f"{f:.1f}×", (b.get_x() + b.get_width() / 2, b.get_height()),
+                      textcoords="offset points", xytext=(0, 3),
+                      ha="center", fontsize=9, fontweight="bold")
+    ax_b.axhline(1.0, color="black", linewidth=0.8, linestyle="--")
+    ax_b.annotate("1× = fp32 ile eşit", (len(models_b) - 0.5, 1.0),
+                  textcoords="offset points", xytext=(0, 4), ha="right",
+                  fontsize=8, style="italic")
+    ax_b.set_xticks(range(len(models_b)))
+    ax_b.set_xticklabels([MODEL_LABEL[m] for m in models_b], fontsize=9)
+    ax_b.set_ylabel("INT8 gecikme / fp32 gecikme (kat)")
+    ax_b.set_title("(b) ORT dynamic INT8: 'pesimizasyon' (512²)", fontsize=10)
+    n_pts += len(factors)
+    fig.tight_layout()
+    save(fig, "fig-4.5-quant")
+    print(f"  fig-4.5: (a) {n_pts - len(factors)} nokta + (b) {len(factors)} çubuk")
+
+
+def fig_outliers() -> None:
+    """Çözünürlüğe karşı en kötü katman: kurtosis (sol) ve chmax/median (sağ)."""
+    resolutions = (256, 512, 768)
+    series: dict[str, tuple[list[int], list[float], list[float]]] = {}
+    for model in ("convnext", "swin", "vmamba"):
+        path = RAW / f"activation_stats_{model}.json"
+        if not path.exists():
+            print(f"UYARI: {path.name} yok — {model} fig-4.6'dan atlandı")
+            continue
+        stats = json.loads(path.read_text())["stats"]
+        xs, kurt, chm = [], [], []
+        for res in resolutions:
+            layers = stats.get(str(res))
+            if not layers:
+                print(f"  fig-4.6 eksik: {model} @ {res}")
+                continue
+            xs.append(res)
+            kurt.append(max(v["kurtosis"] for v in layers.values()))
+            chm.append(max(v["chmax_over_median"] for v in layers.values()))
+        if xs:
+            series[model] = (xs, kurt, chm)
+    if not series:
+        print("UYARI: aktivasyon istatistiği yok — fig-4.6 atlandı")
+        return
+    fig, (ax_k, ax_c) = plt.subplots(1, 2, figsize=(10, 4.2))
+    n_pts = 0
+    for model, (xs, kurt, chm) in series.items():
+        ax_k.plot(xs, kurt, "-o", color=MODEL_COLOR[model], markersize=6,
+                  linewidth=1.6, label=MODEL_LABEL[model])
+        ax_c.plot(xs, chm, "-o", color=MODEL_COLOR[model], markersize=6,
+                  linewidth=1.6, label=MODEL_LABEL[model])
+        n_pts += 2 * len(xs)
+    for ax, ylabel, title in (
+        (ax_k, "En kötü katman kurtosis", "(a) Aykırılık şiddeti"),
+        (ax_c, "En kötü katman chmax / medyan", "(b) Kanal dengesizliği"),
+    ):
+        ax.set_yscale("log")
+        ax.set_xticks(list(resolutions))
+        ax.set_xticklabels([f"{r}²" for r in resolutions])
+        ax.set_xlabel("Girdi çözünürlüğü (piksel)")
+        ax.set_ylabel(ylabel + " (log ölçek)")
+        ax.set_title(title, fontsize=10)
+        ax.legend(framealpha=0.9)
+    fig.tight_layout()
+    save(fig, "fig-4.6-outliers")
+    print(f"  fig-4.6: {len(series)} model, {n_pts} nokta")
+
+
+def fig_reform() -> None:
+    """Yeniden formülasyon: ONNX düğüm sayısı + CoreML ANE/GPU gecikmesi."""
+    path = RAW / "reform_matrix.jsonl"
+    if not path.exists():
+        print("UYARI: reform_matrix.jsonl yok — fig-4.7 atlandı")
+        return
+    rows = [json.loads(l) for l in path.read_text().splitlines() if l.strip()]
+    forms = ("seq", "blocked32", "blocked64", "blocked128", "ane32")
+    FORM_LABEL = {
+        "seq": "seq", "blocked32": "blok-32", "blocked64": "blok-64",
+        "blocked128": "blok-128", "ane32": "ANE-32",
+    }
+
+    def nodes(form: str) -> float | None:
+        vals = [r["num_nodes"] for r in rows
+                if r.get("form") == form and r.get("stage") == "onnx_graph"
+                and r.get("num_nodes") is not None]
+        return vals[-1] if vals else None
+
+    def latency(form: str, stage: str) -> float | None:
+        vals = [float(r["median_ms"]) for r in rows
+                if r.get("form") == form and r.get("stage") == stage
+                and r.get("ok") and r.get("median_ms") is not None]
+        return min(vals) if vals else None
+
+    import numpy as np
+
+    fig, (ax_n, ax_l) = plt.subplots(1, 2, figsize=(10, 4.2))
+    n_pts = 0
+
+    node_vals = []
+    for form in forms:
+        v = nodes(form)
+        if v is None:
+            print(f"  fig-4.7 eksik: {form} / onnx_graph")
+        node_vals.append(v)
+    xs = [i for i, v in enumerate(node_vals) if v is not None]
+    ys = [v for v in node_vals if v is not None]
+    bars = ax_n.bar(xs, ys, color="#7f7f7f", edgecolor="black", linewidth=0.6)
+    for b, v in zip(bars, ys):
+        ax_n.annotate(f"{v:g}", (b.get_x() + b.get_width() / 2, b.get_height()),
+                      textcoords="offset points", xytext=(0, 3),
+                      ha="center", fontsize=8)
+    n_pts += len(ys)
+    ax_n.set_yscale("log")
+    ax_n.set_xticks(range(len(forms)))
+    ax_n.set_xticklabels([FORM_LABEL[f] for f in forms], fontsize=9)
+    ax_n.set_ylabel("ONNX düğüm sayısı (log ölçek)")
+    ax_n.set_title("(a) Graf karmaşıklığı", fontsize=10)
+
+    width = 0.38
+    x = np.arange(len(forms))
+    for i, (stage, lbl, color) in enumerate((
+        ("coreml_all", "CoreML ALL (ANE)", "#9467bd"),
+        ("coreml_cpu_and_gpu", "CoreML CPU+GPU", "#ff7f0e"),
+    )):
+        pos, vals = [], []
+        for j, form in enumerate(forms):
+            v = latency(form, stage)
+            if v is None:
+                print(f"  fig-4.7 eksik: {form} / {stage}")
+                continue
+            pos.append(x[j] + (i - 0.5) * width)
+            vals.append(v)
+        bars = ax_l.bar(pos, vals, width, color=color, label=lbl,
+                        edgecolor="black", linewidth=0.6)
+        for b, v in zip(bars, vals):
+            ax_l.annotate(f"{v:.0f}", (b.get_x() + b.get_width() / 2, b.get_height()),
+                          textcoords="offset points", xytext=(0, 2),
+                          ha="center", fontsize=7.5)
+        n_pts += len(vals)
+    ax_l.set_yscale("log")
+    ax_l.set_xticks(x)
+    ax_l.set_xticklabels([FORM_LABEL[f] for f in forms], fontsize=9)
+    ax_l.set_ylabel("Medyan gecikme (ms, log ölçek)")
+    ax_l.set_title("(b) CoreML gecikmesi", fontsize=10)
+    ax_l.legend(framealpha=0.9)
+    fig.tight_layout()
+    save(fig, "fig-4.7-reform")
+    print(f"  fig-4.7: {n_pts} çubuk")
+
+
 def main() -> int:
     print(f"Şekiller → {FIG}")
     lat = load_latency()
@@ -286,6 +500,9 @@ def main() -> int:
     fig_scaling(lat)
     fig_cost_layers(load_export())
     fig_energy()
+    fig_quant()
+    fig_outliers()
+    fig_reform()
     return 0
 
 
