@@ -104,7 +104,7 @@
 
 | ID | Task | Kim | Complexity | Status | Dependencies |
 |----|------|-----|-----------|--------|-------------|
-| TASK-030 | `selective scan`'i parçalı/sabit-blok forma yeniden yaz (Mamba-2 SSD ikiliğinden yararlan) | 🤝 | L | PENDING | TASK-022 |
+| TASK-030 | Scan yeniden formülasyonu — **PROTOTİP kapsamı** (kullanıcı kararı 14 Ağu): tek SS2D bloğu × 3 form (seq/blocked/ane) | 🤝 | L | 🔶 IN PROGRESS | TASK-022 |
 | TASK-031 | Apple ANE reçetesi: (B,C,1,S) düzeni, split/concat parçalama, reshape/transpose minimizasyonu | 🤝 | L | PENDING | TASK-030 |
 | TASK-032 | Kazanç ölçümü — graf boyutu, yükleme süresi, gecikme, doğruluk ödünleşimi | 🤝 | M | PENDING | TASK-031 |
 | TASK-033 | Bölüm 4.5 (AS4) yazımı. Kazanç yoksa "denenen yaklaşım ve neden yetersiz kaldığı" olarak yaz | 🤖 | M | PENDING | TASK-032 |
