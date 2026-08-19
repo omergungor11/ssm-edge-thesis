@@ -104,7 +104,7 @@ results/
   raw/           TÜM ham ölçümler (JSONL/JSON/npy) — başarısız denemeler dahil
   raw/xcode/     Xcode Core ML Performance Report kanıt görüntüleri
   figures/       Üretilmiş tez şekilleri (PDF+PNG)
-tez/             Tez bölüm taslakları (Türkçe): Bölüm 2, 3, 4.1-4.4
+tez/             Tez metni (Türkçe): Özet + Bölüm 1-6 + kaynakça + ekler + birleşik taslak
 tez-docs/        Analiz özetleri: export-matrisi.md, nicemleme-sonuclari.md, oncul-dogrulama.md,
                  vmamba-yamalari.md (upstream CPU-only hataları), literatür taraması
 tez-plans/       Deney planı, tez iskeleti, Mac-only revizyon gerekçesi
@@ -144,9 +144,11 @@ Her ham kayıt; ortam sürümleri, git commit'i ve termal durumla damgalıdır.
 
 ## Durum
 
-Faz 0-3 tamamlandı (öncül doğrulama → model doğrulama → dağıtım matrisi → nicemleme).
-Devam eden: Faz 4 — `selective scan`'in ANE-dostu yeniden formülasyonu (özgün katkı),
-Faz 5 — tez metni toparlama. Ayrıntı: `tez-tasks/task-index.md`.
+Faz 0-4 tamamlandı: öncül doğrulama → model doğrulama → dağıtım matrisi → nicemleme →
+blok-form yeniden formülasyon prototipi (düğüm 20×↓, CoreML kapısı açıldı; kök teşhis:
+engel operatör uyumu değil **graf ölçeği**). Tez metni komple (Özet + Bölüm 1-6 +
+45 künyeli kaynakça + EK A-D). Kalan: yazarın bütünsel okuması ve final revizyon.
+Ayrıntı: `tez-tasks/task-index.md`.
 
 ## Lisans
 
