@@ -76,6 +76,17 @@ SSM'in teorik üstünlük alanı yüksek çözünürlüktür. Tam o bölgede:
   çözünürlükle kararlı — literatürün "SSM aykırı değer canavarı" anlatısının tersi.
   **İroni: nicemlemeye en dayanıklı omurga, nicemlenecek formata zaten dönüşemiyor.**
 
+## Şekiller
+
+| | |
+|---|---|
+| ![Pareto](results/figures/fig-4.1-pareto.png) | ![Maliyet katmanları](results/figures/fig-4.3-cost-layers.png) |
+| *Şekil 4.1 — Doğruluk-gecikme Pareto düzlemi: VMamba'nın dağıtılabilir-en-iyi noktası sağda yalnız* | *Şekil 4.3 — Dört katmanlı maliyet: VMamba'nın export/yükleme çubukları log ölçekte ayrışıyor* |
+| ![Enerji](results/figures/fig-4.4-energy.png) | ![Reformülasyon](results/figures/fig-4.7-reform.png) |
+| *Şekil 4.4 — Enerji/çıkarım: tek ANE-aktif hücre (ConvNeXt) taralı* | *Şekil 4.7 — Blok formu: düğüm 20×↓, CoreML kapısı açık* |
+
+Tam tez taslağı (tek dosya, ~34.5K kelime): [`tez/TEZ-TAM-TASLAK.md`](tez/TEZ-TAM-TASLAK.md)
+
 ## Depo Yapısı
 
 ```

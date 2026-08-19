@@ -8,15 +8,15 @@
 
 | Faz | Ad | Hafta | Total | Done | In Progress | Pending | Blocked |
 |-----|-----|-------|-------|------|-------------|---------|---------|
-| 0 | Öncül doğrulama + ölçüm altyapısı | 1-2 | 11 | 10 | 1 | 0 | 0 |
+| 0 | Öncül doğrulama + ölçüm altyapısı | 1-2 | 11 | 11 | 0 | 0 | 0 |
 | 1 | Model edinimi + doğruluk doğrulama *(revize)* | 3-4 | 7 | 7 | 0 | 0 | 0 |
 | 2 | Apple dağıtım yığını matrisi ← *kalp* | 5-7 | 5 | 5 | 0 | 0 | 0 |
 | 3 | Nicemlemenin yoğun tahmine transferi | 8-10 | 5 | 5 | 0 | 0 | 0 |
 | 4 | ANE-dostu yeniden formülasyon ← *riskli* | 11-13 | 4 | 4 | 0 | 0 | 0 |
-| 5 | Yazım ve toparlama | 14-16 | 5 | 3 | 0 | 2 | 0 |
-| **Total** | | | **37** | **34** | **0** | **3** | **0** |
+| 5 | Yazım ve toparlama | 14-16 | 5 | 4 | 0 | 1 | 0 |
+| **Total** | | | **37** | **36** | **0** | **1** | **0** |
 
-**Progress**: 34/37 (%92) — kalan: TASK-037 bütünsel okuma (🧑 Ömer!), TASK-038 repo cilası, TASK-007 kalıntısı · **Öncül doğrulandı** (`tez-docs/oncul-dogrulama.md`) · *TASK-006: CoreML EP hücresi Faz 2'ye devredildi
+**Progress**: 36/37 (%97) — kalan TEK iş: **TASK-037 bütünsel okuma (🧑 Ömer)** → notlar → final revizyon · **Öncül doğrulandı** (`tez-docs/oncul-dogrulama.md`) · *TASK-006: CoreML EP hücresi Faz 2'ye devredildi
 
 ### Kim sütunu
 
@@ -41,7 +41,7 @@
 | TASK-004 | Referans gecikme ölçümü — PyTorch eager (CPU+MPS), saf-torch selective scan | 🤖 | M | ✅ DONE | TASK-002 |
 | TASK-005 | ONNX export denemesi — graf boyutu, unroll davranışı, yükleme süresi | 🤖 | M | ✅ DONE | TASK-004 |
 | TASK-006 | ONNX Runtime ölçümü (CPU EP + **CoreML EP**) → **ilk yavaşlama oranı** | 🤖 | M | ✅ DONE* | TASK-005 |
-| TASK-007 | CoreML export + M5 / ANE ölçümü (CPU/GPU/ANE compute unit ayrımı) | 🤝 | M | 🔶 PARTIAL (ALL units ölçüldü; unit ayrımı + Xcode → Faz 2) | TASK-002, TASK-005 |
+| TASK-007 | CoreML export + M5 / ANE ölçümü | 🤝 | M | ✅ DONE — Faz 2'de fazlasıyla tamamlandı (TASK-021/023) | TASK-002, TASK-005 |
 | TASK-008 | **KARAR NOKTASI** — `tez-docs/oncul-dogrulama.md`: öncül doğrulandı mı? | 🤝 | S | ✅ DONE — **doğrulandı (rafine)** | TASK-006, TASK-007 |
 | TASK-009 | Ölçüm harness'ı: ısınma, senkronizasyon, termal bekleme, `powermetrics` (ops.), istatistik | 🤖 | L | ✅ DONE — `src/benchmark/` | TASK-008 |
 | TASK-010 | Harness doğrulaması — ResNet-50 ile bilinen sayılar üretiliyor mu? | 🤝 | M | ✅ DONE — desen + %1.2 tekrar | TASK-009 |
@@ -119,7 +119,7 @@
 | TASK-035 | Bölüm 1 (Giriş) + Özet/Abstract | 🤖 | M | ✅ DONE — 2.5K + Özet/Abstract | TASK-034 |
 | TASK-036 | Kaynakça + Ekler A-D | 🤖 | M | ✅ DONE — 48/48 atıf çözüldü, 45 künye (uydurma yok), tutarlılık raporu | TASK-034 |
 | TASK-037 | Bütünsel okuma, tutarlılık kontrolü, şekil/tablo numaralandırma, dil düzeltmesi | 🤝 | L | PENDING | TASK-035, TASK-036 |
-| TASK-038 | Kod deposunu temizle ve yayınla (tekrarlanabilirlik paketi) | 🤖 | M | PENDING | TASK-037 |
+| TASK-038 | Repo temizliği + yayın | 🤖 | M | ✅ DONE — public+MIT+README(şekilli)+birleşik taslak; kalan cila TASK-037 notlarıyla | TASK-037 |
 
 ---
 
